@@ -1,0 +1,50 @@
+# Template : l'image nginx remplace ${TAILSCALE_HOSTNAME} (variable d'environnement du
+# conteneur) au démarrage. Les variables nginx ($host, $uri...) restent intactes.
+
+server {
+    listen 80;
+    server_name ${TAILSCALE_HOSTNAME};
+    return 301 https://${TAILSCALE_HOSTNAME}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${TAILSCALE_HOSTNAME};
+
+    # Certificats générés par `tailscale cert` sur l'hôte (expiration ~90 jours :
+    # les renouveler puis `docker compose exec nginx nginx -s reload`).
+    ssl_certificate     /etc/nginx/certs/${TAILSCALE_HOSTNAME}.crt;
+    ssl_certificate_key /etc/nginx/certs/${TAILSCALE_HOSTNAME}.key;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+
+    # Taille max d'un envoi (photos de recettes).
+    client_max_body_size 20m;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+
+    add_header X-Content-Type-Options nosniff always;
+
+    location /static/ {
+        alias /srv/static/;
+        # Noms de fichiers non hachés : durée courte pour voir les mises à jour.
+        expires 1h;
+    }
+
+    location /media/ {
+        alias /srv/media/;
+        # Django ne réutilise jamais le nom d'une photo existante : cache long sans risque.
+        expires 30d;
+    }
+
+    location / {
+        proxy_pass http://web:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Django s'appuie sur cet en-tête pour savoir que la requête d'origine était en HTTPS.
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+}

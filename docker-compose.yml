@@ -1,0 +1,38 @@
+# Production sur le portable. Toute la config vient du fichier .env (voir .env.example).
+services:
+  web:
+    build:
+      context: .
+      args:
+        APP_UID: ${APP_UID:-1000}
+        APP_GID: ${APP_GID:-1000}
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./media:/app/media
+      - staticfiles:/app/staticfiles
+    # Pas de `ports` : gunicorn n'est joignable que par nginx, via le réseau interne.
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:stable-alpine
+    depends_on:
+      - web
+    ports:
+      - "${BIND_ADDRESS:-0.0.0.0}:80:80"
+      - "${BIND_ADDRESS:-0.0.0.0}:443:443"
+    environment:
+      # Substituée dans le template nginx par le script d'entrée de l'image.
+      TAILSCALE_HOSTNAME: ${TAILSCALE_HOSTNAME:?définir TAILSCALE_HOSTNAME dans .env}
+    volumes:
+      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - staticfiles:/srv/static:ro
+      - ./media:/srv/media:ro
+      - ${CERTS_DIR:?définir CERTS_DIR dans .env}:/etc/nginx/certs:ro
+    restart: unless-stopped
+
+volumes:
+  # Sortie de collectstatic : écrite par web, lue par nginx. Se régénère au démarrage.
+  staticfiles:

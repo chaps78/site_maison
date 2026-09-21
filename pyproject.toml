@@ -1,0 +1,15 @@
+# Configuration des outils uniquement (le projet n'est pas un paquet installable).
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+python_files = ["tests.py", "test_*.py"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+# E/F : erreurs de base, I : tri des imports, B : bugs probables, UP : syntaxe moderne,
+# DJ : bonnes pratiques Django.
+select = ["E", "F", "I", "B", "UP", "DJ"]

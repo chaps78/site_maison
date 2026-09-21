@@ -1,0 +1,30 @@
+# --- Secrets et config locale ---
+.env
+.claude/settings.local.json
+
+# --- Données persistantes (volumes Docker) ---
+# On garde seulement un .gitkeep pour que les dossiers existent après un clone :
+# sinon Docker les crée en root et le conteneur ne peut plus écrire dedans.
+data/*
+!data/.gitkeep
+media/*
+!media/.gitkeep
+*.sqlite3
+*.sqlite3-*
+
+# --- Sortie de collectstatic (partagée avec nginx) ---
+staticfiles/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Éditeurs / OS ---
+.idea/
+.vscode/
+.DS_Store
