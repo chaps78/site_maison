@@ -16,9 +16,8 @@ class Tag(models.Model):
 
 
 class TypeIngredient(models.Model):
-    """Catalogue des ingrédients (« Farine », « Lait »...), pas encore relié aux lignes
-    d'ingrédients des recettes : ce sera la base de l'app courses et d'un futur lien
-    avec Ingredient, pour l'instant on construit juste le catalogue.
+    """Catalogue des ingrédients (« Farine », « Lait »...), choisi dans les lignes
+    d'ingrédients d'une recette (voir Ingredient) ; sera aussi la base de l'app courses.
     """
 
     class Quantification(models.TextChoices):
@@ -52,7 +51,9 @@ class Recette(Traced):
         "temps de cuisson", null=True, blank=True, help_text="En minutes."
     )
     portions = models.PositiveSmallIntegerField(default=4, validators=[MinValueValidator(1)])
-    instructions = models.TextField()
+    # Optionnel : la création rapide ne demande qu'un titre, des ingrédients et un
+    # commentaire (description) ; les étapes détaillées peuvent être ajoutées plus tard.
+    instructions = models.TextField(blank=True)
     photo = models.ImageField(upload_to="recettes/%Y/%m/", blank=True)
     favori = models.BooleanField(default=False)
     tags = models.ManyToManyField(Tag, blank=True, related_name="recettes")
@@ -65,31 +66,26 @@ class Recette(Traced):
 
 
 class Ingredient(models.Model):
-    class Unite(models.TextChoices):
-        GRAMME = "g", "g"
-        KILOGRAMME = "kg", "kg"
-        MILLILITRE = "ml", "ml"
-        CENTILITRE = "cl", "cl"
-        LITRE = "l", "l"
-        CUILLERE_CAFE = "cac", "c. à café"
-        CUILLERE_SOUPE = "cas", "c. à soupe"
-        TASSE = "tasse", "tasse"
-        PINCEE = "pincee", "pincée"
-        PIECE = "piece", "pièce"
-        GOUSSE = "gousse", "gousse"
-        TRANCHE = "tranche", "tranche"
+    """Une ligne d'ingrédient d'une recette : un type d'ingrédient du catalogue + une
+    quantité. L'unité n'est plus saisie ici : elle vient de type_ingredient.quantification.
+    """
 
     recette = models.ForeignKey(Recette, on_delete=models.CASCADE, related_name="ingredients")
-    nom = models.CharField(max_length=200)
+    # PROTECT : on ne peut pas supprimer un type d'ingrédient utilisé par une recette
+    # (voir type_ingredient_supprimer, qui affiche un message plutôt qu'une erreur 500).
+    type_ingredient = models.ForeignKey(
+        TypeIngredient,
+        on_delete=models.PROTECT,
+        related_name="utilisations",
+        verbose_name="ingrédient",
+    )
     quantite = models.DecimalField(
         "quantité", max_digits=8, decimal_places=2, null=True, blank=True
     )
-    # Vide = sans unité (« 2 œufs », « sel »).
-    unite = models.CharField("unité", max_length=10, choices=Unite.choices, blank=True)
     ordre = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         ordering = ["ordre", "id"]
 
     def __str__(self):
-        return self.nom
+        return str(self.type_ingredient)

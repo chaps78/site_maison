@@ -323,6 +323,28 @@ table.matrice-multiplication th {
     color: var(--couleur-texte-discret);
 }
 
+/* --- Recettes : formulaire d'ingrédients (titre + quantité, une ligne vide ignorée) --- */
+
+table.formset-ingredients {
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+table.formset-ingredients th {
+    text-align: left;
+    color: var(--couleur-texte-discret);
+    font-size: 0.85rem;
+    padding: 0 0.6rem 0.3rem 0;
+}
+
+table.formset-ingredients td {
+    padding: 0.2rem 0.6rem 0.2rem 0;
+}
+
+table.formset-ingredients select {
+    min-width: 12rem;
+}
+
 /* --- Petit écran : le menu passe au-dessus du contenu plutôt qu'à côté --- */
 
 @media (max-width: 40rem) {

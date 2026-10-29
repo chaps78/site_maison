@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Créer une recette – Recettes{% endblock %}
+
+{% block contenu %}
+    <h1>Créer une recette</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ recette_form.as_p }}
+
+        <h2>Ingrédients</h2>
+        <p>
+            Laisse vides les lignes dont tu n'as pas besoin.
+            {% if not formset.forms.0.fields.type_ingredient.queryset.exists %}
+                Aucun ingrédient dans le catalogue pour l'instant :
+                <a href="{% url 'recettes:type_ingredient_creer' %}">en créer un</a>.
+            {% endif %}
+        </p>
+        {{ formset.management_form }}
+        {{ formset.non_form_errors }}
+        <table class="formset-ingredients">
+            <tr><th>Ingrédient</th><th>Quantité</th></tr>
+            {% for ligne in formset %}
+                <tr>
+                    <td>{{ ligne.type_ingredient }}</td>
+                    <td>{{ ligne.quantite }}</td>
+                </tr>
+                <tr><td colspan="2">{{ ligne.type_ingredient.errors }}{{ ligne.quantite.errors }}</td></tr>
+            {% endfor %}
+        </table>
+
+        <button type="submit">Créer la recette</button>
+    </form>
+    <p><a href="{% url 'recettes:liste' %}">Annuler</a></p>
+{% endblock %}

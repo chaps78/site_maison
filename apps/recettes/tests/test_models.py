@@ -1,8 +1,8 @@
 from decimal import Decimal
 
 import pytest
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
+from django.db.models import ProtectedError
 
 from apps.recettes.models import Ingredient, Recette, Tag, TypeIngredient
 
@@ -14,36 +14,52 @@ def recette(db, user):
     )
 
 
+@pytest.fixture
+def farine(db):
+    return TypeIngredient.objects.create(
+        nom="Farine", quantification=TypeIngredient.Quantification.KILOGRAMME
+    )
+
+
+@pytest.fixture
+def pommes(db):
+    return TypeIngredient.objects.create(
+        nom="Pommes", quantification=TypeIngredient.Quantification.QUANTITE
+    )
+
+
 def test_valeurs_par_defaut(recette):
     assert recette.portions == 4
     assert recette.favori is False
     assert str(recette) == "Tarte aux pommes"
 
 
-def test_les_ingredients_suivent_le_champ_ordre(recette):
-    Ingredient.objects.create(recette=recette, nom="Sucre", ordre=2)
-    Ingredient.objects.create(recette=recette, nom="Pommes", ordre=1)
-    Ingredient.objects.create(recette=recette, nom="Farine", ordre=3)
-    assert [i.nom for i in recette.ingredients.all()] == ["Pommes", "Sucre", "Farine"]
+def test_les_ingredients_suivent_le_champ_ordre(recette, farine, pommes):
+    sucre = TypeIngredient.objects.create(
+        nom="Sucre", quantification=TypeIngredient.Quantification.GRAMME
+    )
+    Ingredient.objects.create(recette=recette, type_ingredient=sucre, ordre=2)
+    Ingredient.objects.create(recette=recette, type_ingredient=pommes, ordre=1)
+    Ingredient.objects.create(recette=recette, type_ingredient=farine, ordre=3)
+    noms = [i.type_ingredient.nom for i in recette.ingredients.all()]
+    assert noms == ["Pommes", "Sucre", "Farine"]
 
 
-def test_quantite_decimale_et_facultative(recette):
-    ingredient = Ingredient.objects.create(recette=recette, nom="Sel")
+def test_quantite_decimale_et_facultative(recette, farine):
+    ingredient = Ingredient.objects.create(recette=recette, type_ingredient=farine)
     assert ingredient.quantite is None
-    assert ingredient.unite == ""
     ingredient.quantite = Decimal("1.50")
-    ingredient.unite = Ingredient.Unite.KILOGRAMME
     ingredient.full_clean()
 
 
-def test_unite_hors_liste_refusee(recette):
-    ingredient = Ingredient(recette=recette, nom="Sel", unite="parsec")
-    with pytest.raises(ValidationError):
-        ingredient.full_clean()
+def test_on_ne_peut_pas_supprimer_un_ingredient_utilise_dans_une_recette(recette, farine):
+    Ingredient.objects.create(recette=recette, type_ingredient=farine)
+    with pytest.raises(ProtectedError):
+        farine.delete()
 
 
-def test_supprimer_la_recette_supprime_ses_ingredients(recette):
-    Ingredient.objects.create(recette=recette, nom="Pommes")
+def test_supprimer_la_recette_supprime_ses_ingredients(recette, pommes):
+    Ingredient.objects.create(recette=recette, type_ingredient=pommes)
     recette.delete()
     assert Ingredient.objects.count() == 0
 

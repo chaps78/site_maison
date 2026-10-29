@@ -4,5 +4,16 @@
 
 {% block contenu %}
     <h1>Recettes</h1>
-    <p><a href="{% url 'recettes:types_ingredients_liste' %}">Types d'ingrédients</a></p>
+    <p>
+        <a href="{% url 'recettes:recette_creer' %}">Créer une recette</a>
+        —
+        <a href="{% url 'recettes:types_ingredients_liste' %}">Types d'ingrédients</a>
+    </p>
+    <ul class="liste-catalogue">
+        {% for recette in recettes %}
+            <li>{{ recette.titre }}</li>
+        {% empty %}
+            <li>Aucune recette pour l'instant.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

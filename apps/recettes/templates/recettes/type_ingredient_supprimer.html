@@ -4,9 +4,13 @@
 
 {% block contenu %}
     <h1>Supprimer « {{ type_ingredient.nom }} » ?</h1>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Confirmer la suppression</button>
-    </form>
+    {% if erreur %}
+        <p class="erreur">{{ erreur }}</p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Confirmer la suppression</button>
+        </form>
+    {% endif %}
     <p><a href="{% url 'recettes:types_ingredients_liste' %}">Annuler</a></p>
 {% endblock %}
