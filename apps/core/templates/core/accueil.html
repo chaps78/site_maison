@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Accueil – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Maison</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'recettes:liste' %}">Recettes</a></li>
+            <li><a href="{% url 'calendrier:vue' %}">Calendrier</a></li>
+        </ul>
+    </nav>
+{% endblock %}

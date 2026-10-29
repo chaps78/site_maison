@@ -1,0 +1,22 @@
+/* Style minimal, commun à toutes les pages. */
+
+body {
+    font-family: system-ui, sans-serif;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+header a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav li {
+    margin: 0.5rem 0;
+}
