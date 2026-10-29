@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Question {{ numero }}/{{ total }} – Révisions{% endblock %}
+
+{% block contenu %}
+    <p class="progression">Question {{ numero }} / {{ total }}</p>
+    <h1 class="question-multiplication">{{ a }} × {{ b }} = ?</h1>
+    <form method="post" class="form-reponse">
+        {% csrf_token %}
+        <input
+            type="number"
+            name="reponse"
+            inputmode="numeric"
+            autofocus
+            required
+        >
+        <button type="submit">Valider</button>
+    </form>
+{% endblock %}

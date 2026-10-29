@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Tables de multiplication – Révisions{% endblock %}
+
+{% block contenu %}
+    <h1>Tables de multiplication</h1>
+    <p>Quelles tables veux-tu réviser ?</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.tables.errors }}
+        <ul class="choix-tables">
+            {% for case in form.tables %}
+                <li>{{ case.tag }} {{ case.choice_label }}</li>
+            {% endfor %}
+        </ul>
+        <button type="submit">Démarrer</button>
+    </form>
+    <p>
+        <a href="{% url 'revisions:multiplication_statistiques' %}">Voir les statistiques</a>
+        —
+        <a href="{% url 'revisions:accueil' %}">Retour aux révisions</a>
+    </p>
+{% endblock %}

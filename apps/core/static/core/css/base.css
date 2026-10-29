@@ -201,7 +201,7 @@ input, select, button, textarea {
     font: inherit;
 }
 
-input[type="text"], input[type="password"], select, textarea {
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
     padding: 0.5rem 0.65rem;
     border: 1px solid var(--couleur-bordure);
     border-radius: var(--rayon);
@@ -248,7 +248,8 @@ button:hover, input[type="submit"]:hover {
 ul.liste-profils,
 ul.liste-taches,
 ul.liste-catalogue,
-ul.totaux-points {
+ul.totaux-points,
+ul.liste-exercices {
     list-style: none;
     padding: 0;
 }
@@ -256,12 +257,70 @@ ul.totaux-points {
 ul.liste-profils li,
 ul.liste-taches li,
 ul.liste-catalogue li,
-ul.totaux-points li {
+ul.totaux-points li,
+ul.liste-exercices li {
     background: var(--couleur-surface);
     border: 1px solid var(--couleur-bordure);
     border-radius: var(--rayon);
     padding: 0.6rem 0.9rem;
     margin-bottom: 0.4rem;
+}
+
+/* --- Révisions : quiz de tables de multiplication --- */
+
+.choix-tables {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    max-width: 20rem;
+    margin-bottom: 1rem;
+}
+
+.progression {
+    color: var(--couleur-texte-discret);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.question-multiplication {
+    font-size: 3rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.form-reponse {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.form-reponse input[type="number"] {
+    font-size: 1.5rem;
+    max-width: 8rem;
+}
+
+.score {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--couleur-accent);
+}
+
+table.matrice-multiplication {
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+table.matrice-multiplication th,
+table.matrice-multiplication td {
+    border: 1px solid var(--couleur-bordure);
+    padding: 0.4rem 0.6rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+table.matrice-multiplication th {
+    background: var(--couleur-fond);
+    color: var(--couleur-texte-discret);
 }
 
 /* --- Petit écran : le menu passe au-dessus du contenu plutôt qu'à côté --- */
