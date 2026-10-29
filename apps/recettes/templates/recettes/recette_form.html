@@ -26,7 +26,9 @@
             </tr>
             {% for ligne in formset %}
                 <tr>
-                    <td>{{ ligne.type_ingredient }}</td>
+                    {# ligne.id : champ caché indispensable pour qu'une ligne déjà
+                       enregistrée soit reconnue comme une modification, pas un doublon. #}
+                    <td>{{ ligne.id }}{{ ligne.type_ingredient }}</td>
                     <td>{{ ligne.quantite }}</td>
                     {% if formset.can_delete %}<td>{{ ligne.DELETE }}</td>{% endif %}
                 </tr>

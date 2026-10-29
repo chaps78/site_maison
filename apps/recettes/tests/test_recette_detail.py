@@ -68,6 +68,17 @@ def test_le_detail_affiche_ingredients_et_commentaire(client, user, recette):
 
 
 @pytest.mark.django_db
+def test_le_formulaire_de_modification_inclut_l_id_des_lignes_existantes(client, user, recette):
+    """Régression : sans le champ caché id, Django ne reconnaît pas les lignes
+    existantes et « Enregistrer » ne modifiait rien (voir recette_form.html)."""
+    client.force_login(user)
+    ingredient = recette.ingredients.get()
+    reponse = client.get(reverse("recettes:recette_modifier", args=[recette.pk]))
+    attendu = f'name="ingredients-0-id" value="{ingredient.pk}"'
+    assert attendu in reponse.content.decode()
+
+
+@pytest.mark.django_db
 def test_modifier_le_titre_et_le_commentaire(client, user, recette, farine):
     client.force_login(user)
     ingredient = recette.ingredients.get()
