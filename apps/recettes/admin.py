@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from apps.core.admin import TracedAdmin
 
-from .models import Ingredient, Recette, Tag
+from .models import Ingredient, Recette, Tag, TypeIngredient
 
 
 class IngredientInline(admin.TabularInline):
@@ -24,3 +24,10 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ("nom", "slug")
     search_fields = ("nom",)
     prepopulated_fields = {"slug": ("nom",)}
+
+
+@admin.register(TypeIngredient)
+class TypeIngredientAdmin(admin.ModelAdmin):
+    list_display = ("nom", "quantification")
+    list_filter = ("quantification",)
+    search_fields = ("nom",)

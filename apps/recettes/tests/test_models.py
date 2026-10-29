@@ -4,7 +4,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 
-from apps.recettes.models import Ingredient, Recette, Tag
+from apps.recettes.models import Ingredient, Recette, Tag, TypeIngredient
 
 
 @pytest.fixture
@@ -65,3 +65,18 @@ def test_supprimer_l_auteur_conserve_la_recette(recette, user):
     user.delete()
     recette.refresh_from_db()
     assert recette.created_by is None
+
+
+def test_le_nom_d_un_type_ingredient_est_unique(db):
+    TypeIngredient.objects.create(nom="Farine", quantification=TypeIngredient.Quantification.POIDS)
+    with pytest.raises(IntegrityError), transaction.atomic():
+        TypeIngredient.objects.create(
+            nom="Farine", quantification=TypeIngredient.Quantification.LITRES
+        )
+
+
+def test_str_type_ingredient(db):
+    type_ingredient = TypeIngredient.objects.create(
+        nom="Lait", quantification=TypeIngredient.Quantification.LITRES
+    )
+    assert str(type_ingredient) == "Lait"

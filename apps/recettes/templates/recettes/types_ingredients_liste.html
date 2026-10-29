@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Types d'ingrédients – Recettes{% endblock %}
+
+{% block contenu %}
+    <h1>Types d'ingrédients</h1>
+    <p>
+        Catalogue des ingrédients, pas encore relié aux recettes : il servira à alimenter
+        les lignes d'ingrédients plus tard.
+    </p>
+    <p><a href="{% url 'recettes:type_ingredient_creer' %}">Ajouter un type d'ingrédient</a></p>
+    <ul class="liste-catalogue">
+        {% for type_ingredient in types %}
+            <li>
+                {{ type_ingredient.nom }}
+                <span class="badge">{{ type_ingredient.get_quantification_display }}</span>
+                — <a href="{% url 'recettes:type_ingredient_modifier' type_ingredient.pk %}">
+                    modifier
+                </a>
+                — <a href="{% url 'recettes:type_ingredient_supprimer' type_ingredient.pk %}">
+                    supprimer
+                </a>
+            </li>
+        {% empty %}
+            <li>Aucun type d'ingrédient pour l'instant.</li>
+        {% endfor %}
+    </ul>
+    <p><a href="{% url 'recettes:liste' %}">Retour aux recettes</a></p>
+{% endblock %}

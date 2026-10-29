@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Supprimer {{ type_ingredient.nom }} – Recettes{% endblock %}
+
+{% block contenu %}
+    <h1>Supprimer « {{ type_ingredient.nom }} » ?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la suppression</button>
+    </form>
+    <p><a href="{% url 'recettes:types_ingredients_liste' %}">Annuler</a></p>
+{% endblock %}

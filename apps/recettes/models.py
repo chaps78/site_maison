@@ -15,6 +15,31 @@ class Tag(models.Model):
         return self.nom
 
 
+class TypeIngredient(models.Model):
+    """Catalogue des ingrédients (« Farine », « Lait »...), pas encore relié aux lignes
+    d'ingrédients des recettes : ce sera la base de l'app courses et d'un futur lien
+    avec Ingredient, pour l'instant on construit juste le catalogue.
+    """
+
+    class Quantification(models.TextChoices):
+        POIDS = "poids", "Poids"
+        QUANTITE = "quantite", "Quantité"
+        LITRES = "litres", "Litres"
+
+    nom = models.CharField(max_length=200, unique=True)
+    quantification = models.CharField(
+        "type de quantification", max_length=10, choices=Quantification.choices
+    )
+
+    class Meta:
+        ordering = ["nom"]
+        verbose_name = "type d'ingrédient"
+        verbose_name_plural = "types d'ingrédient"
+
+    def __str__(self):
+        return self.nom
+
+
 class Recette(Traced):
     titre = models.CharField(max_length=200)
     description = models.TextField(blank=True)
