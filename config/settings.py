@@ -75,6 +75,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Alimente le menu latéral (core/base.html) avec les points du mois en cours.
+                "apps.taches.context_processors.points_du_mois",
             ],
         },
     },

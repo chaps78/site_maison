@@ -3,12 +3,6 @@
 {% block titre %}Accueil – Maison{% endblock %}
 
 {% block contenu %}
-    <h1>Maison</h1>
-    <nav>
-        <ul>
-            <li><a href="{% url 'recettes:liste' %}">Recettes</a></li>
-            <li><a href="{% url 'calendrier:vue' %}">Calendrier</a></li>
-            <li><a href="{% url 'taches:accueil' %}">Tâches</a></li>
-        </ul>
-    </nav>
+    <h1>Bonjour {{ user.first_name }} !</h1>
+    <p>Utilise le menu à gauche pour naviguer dans le site.</p>
 {% endblock %}

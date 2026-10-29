@@ -3,15 +3,12 @@ from datetime import date, timedelta
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q, Sum
-from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from apps.core.models import User
-
 from .forms import TacheRapideForm, TypeTacheForm
 from .models import TacheEffectuee, TypeTache
+from .points import totaux_du_mois
 
 
 @login_required
@@ -61,21 +58,7 @@ def historique(request):
     )
 
     # Un enfant qui n'a rien fait ce mois-ci doit tout de même apparaître, avec 0 point.
-    enfants_totaux = (
-        User.objects.filter(is_staff=False, est_parent=False)
-        .order_by("ordre", "first_name")
-        .annotate(
-            total=Coalesce(
-                Sum(
-                    "taches_effectuees__type_tache__points",
-                    filter=Q(
-                        taches_effectuees__date__year=annee, taches_effectuees__date__month=mois
-                    ),
-                ),
-                0,
-            )
-        )
-    )
+    enfants_totaux = totaux_du_mois(annee, mois)
 
     mois_precedent = premier_jour_du_mois - timedelta(days=1)
     mois_suivant = dernier_jour_du_mois + timedelta(days=1)

@@ -1,60 +1,228 @@
-/* Style minimal, commun à toutes les pages. */
+/* Style commun à toutes les pages : variables de couleur, menu latéral, composants simples.
+   Volontairement en CSS brut (pas de framework) : pas de chaîne de build JS sur ce projet. */
+
+:root {
+    --couleur-fond: #f4f6f8;
+    --couleur-surface: #ffffff;
+    --couleur-texte: #1f2328;
+    --couleur-texte-discret: #6b7280;
+    --couleur-bordure: #e2e5e9;
+    --couleur-accent: #2563eb;
+    --couleur-accent-clair: #eaf0fe;
+    --couleur-erreur: #b00020;
+    --rayon: 0.6rem;
+    --ombre: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
 
 body {
     font-family: system-ui, sans-serif;
-    max-width: 40rem;
-    margin: 0 auto;
-    padding: 1rem;
-}
-
-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-header a:first-child {
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.profil-courant {
-    margin-left: auto;
-    color: #555;
-}
-
-.form-deconnexion {
     margin: 0;
+    background: var(--couleur-fond);
+    color: var(--couleur-texte);
+    line-height: 1.5;
 }
+
+h1, h2 {
+    margin-top: 0;
+}
+
+a {
+    color: var(--couleur-accent);
+}
+
+/* --- Mise en page avec menu latéral (une fois connecté) --- */
+
+body.avec-menu {
+    display: flex;
+    min-height: 100vh;
+}
+
+.menu-lateral {
+    width: 14rem;
+    flex-shrink: 0;
+    background: var(--couleur-surface);
+    border-right: 1px solid var(--couleur-bordure);
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.menu-lateral .logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--couleur-texte);
+}
+
+.liens-navigation {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.liens-navigation a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--rayon);
+    text-decoration: none;
+    color: var(--couleur-texte);
+    font-weight: 500;
+}
+
+.liens-navigation a:hover {
+    background: var(--couleur-accent-clair);
+}
+
+.liens-navigation a.actif {
+    background: var(--couleur-accent-clair);
+    color: var(--couleur-accent);
+}
+
+.points-du-mois {
+    background: var(--couleur-fond);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    padding: 0.75rem;
+}
+
+.points-du-mois h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--couleur-texte-discret);
+    margin-bottom: 0.5rem;
+}
+
+.points-du-mois ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.points-du-mois li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.points-du-mois strong {
+    color: var(--couleur-accent);
+}
+
+.bas-du-menu {
+    margin-top: auto;
+    border-top: 1px solid var(--couleur-bordure);
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.bas-du-menu a {
+    color: var(--couleur-texte);
+    text-decoration: none;
+}
+
+.bas-du-menu button {
+    background: none;
+    border: none;
+    color: var(--couleur-texte-discret);
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: left;
+}
+
+.bas-du-menu button:hover {
+    color: var(--couleur-erreur);
+    opacity: 1;
+}
+
+.contenu {
+    flex: 1;
+    padding: 2rem;
+    max-width: 48rem;
+}
+
+/* --- Page sans menu (écrans de connexion) --- */
+
+body.sans-menu .contenu {
+    max-width: 30rem;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Boutons de profil (écran de connexion) --- */
 
 .profils-connexion {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
+    justify-content: center;
 }
 
 .bouton-profil {
     display: block;
     padding: 1.5rem 2rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
+    background: var(--couleur-surface);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    box-shadow: var(--ombre);
     text-decoration: none;
-    font-size: 1.2rem;
+    color: var(--couleur-texte);
+    font-size: 1.1rem;
+    font-weight: 600;
     text-align: center;
     min-width: 8rem;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.erreur {
-    color: #b00020;
+.bouton-profil:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
 }
 
-.badge {
-    font-size: 0.8rem;
-    color: #555;
-    border: 1px solid #ccc;
-    border-radius: 0.3rem;
-    padding: 0.1rem 0.4rem;
+/* --- Formulaires et boutons --- */
+
+input, select, button, textarea {
+    font: inherit;
+}
+
+input[type="text"], input[type="password"], select, textarea {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    background: var(--couleur-surface);
+    color: var(--couleur-texte);
+    width: 100%;
+    max-width: 20rem;
+}
+
+button, input[type="submit"] {
+    background: var(--couleur-accent);
+    color: white;
+    border: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--rayon);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover, input[type="submit"]:hover {
+    opacity: 0.9;
 }
 
 .form-inline {
@@ -62,11 +230,54 @@ header a:first-child {
     margin: 0;
 }
 
-nav ul {
+/* --- Divers --- */
+
+.erreur {
+    color: var(--couleur-erreur);
+}
+
+.badge {
+    font-size: 0.75rem;
+    color: var(--couleur-texte-discret);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+}
+
+/* Listes « carte » utilisées dans profils, tâches, catalogue... */
+ul.liste-profils,
+ul.liste-taches,
+ul.liste-catalogue,
+ul.totaux-points {
     list-style: none;
     padding: 0;
 }
 
-nav li {
-    margin: 0.5rem 0;
+ul.liste-profils li,
+ul.liste-taches li,
+ul.liste-catalogue li,
+ul.totaux-points li {
+    background: var(--couleur-surface);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+/* --- Petit écran : le menu passe au-dessus du contenu plutôt qu'à côté --- */
+
+@media (max-width: 40rem) {
+    body.avec-menu {
+        flex-direction: column;
+    }
+
+    .menu-lateral {
+        width: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--couleur-bordure);
+    }
+
+    .contenu {
+        padding: 1.25rem;
+    }
 }
