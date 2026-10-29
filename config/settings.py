@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "apps.calendrier",
     "apps.taches",
     "apps.revisions",
+    "apps.diner",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -10,6 +10,7 @@ urlpatterns = [
     path("calendrier/", include("apps.calendrier.urls")),
     path("taches/", include("apps.taches.urls")),
     path("revisions/", include("apps.revisions.urls")),
+    path("diner/", include("apps.diner.urls")),
 ]
 
 # En développement (runserver), Django sert lui-même les photos ; en production c'est nginx

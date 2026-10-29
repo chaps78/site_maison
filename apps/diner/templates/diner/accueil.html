@@ -1,0 +1,108 @@
+{% extends "core/base.html" %}
+
+{% block titre %}On mange quoi ce soir ? – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>On mange quoi ce soir ?</h1>
+
+    <h2>Mon vote</h2>
+    {% if not form.fields.premier_choix.queryset.exists %}
+        <p>
+            Aucune recette pour l'instant :
+            <a href="{% url 'recettes:recette_creer' %}">en créer une</a>.
+        </p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Voter</button>
+        </form>
+    {% endif %}
+
+    <h2>Résultats du jour</h2>
+    <ul class="liste-catalogue">
+        {% for entree in resultats %}
+            <li>
+                <strong>{{ entree.recette.titre }}</strong> — {{ entree.total }} point{{ entree.total|pluralize }}
+                <ul>
+                    {% for v in entree.votants %}
+                        <li>{{ v.votant.first_name }} ({{ v.rang }}{% if v.rang == 1 %}er{% else %}e{% endif %} choix, {{ v.points }} pt)</li>
+                    {% endfor %}
+                </ul>
+
+                <form
+                    action="{% url 'diner:courses_basculer' entree.recette.pk %}"
+                    method="post"
+                    class="form-inline"
+                >
+                    {% csrf_token %}
+                    <button type="submit">
+                        {% if entree.etat_courses.courses_a_faire %}
+                            Courses à faire ✓
+                        {% else %}
+                            Courses à faire ?
+                        {% endif %}
+                    </button>
+                </form>
+
+                {% if entree.etat_courses.courses_a_faire %}
+                    <button
+                        type="button"
+                        class="bouton-ingredients-manquants"
+                        data-cible="popup-ingredients-{{ entree.recette.pk }}"
+                    >
+                        Voir les ingrédients manquants
+                    </button>
+
+                    <dialog id="popup-ingredients-{{ entree.recette.pk }}">
+                        <h3>Ingrédients manquants — {{ entree.recette.titre }}</h3>
+                        <form
+                            method="post"
+                            action="{% url 'diner:ingredients_manquants_modifier' entree.recette.pk %}"
+                        >
+                            {% csrf_token %}
+                            <ul class="choix-tables">
+                                {% for ingredient in entree.ingredients %}
+                                    <li>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                name="manquant"
+                                                value="{{ ingredient.pk }}"
+                                                {% if ingredient in entree.etat_courses.ingredients_manquants.all %}checked{% endif %}
+                                            >
+                                            {{ ingredient.type_ingredient.nom }}
+                                        </label>
+                                    </li>
+                                {% empty %}
+                                    <li>Cette recette n'a pas d'ingrédients renseignés.</li>
+                                {% endfor %}
+                            </ul>
+                            <button type="submit">Enregistrer</button>
+                            <button type="button" class="fermer-popup">Fermer</button>
+                        </form>
+                    </dialog>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Personne n'a encore voté aujourd'hui.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // Ouvre/ferme les popups d'ingrédients manquants (une balise <dialog> par plat) :
+        // aucune bibliothèque, juste l'élément <dialog> natif du navigateur.
+        document.querySelectorAll(".bouton-ingredients-manquants").forEach(function (bouton) {
+            bouton.addEventListener("click", function () {
+                document.getElementById(bouton.dataset.cible).showModal();
+            });
+        });
+        document.querySelectorAll(".fermer-popup").forEach(function (bouton) {
+            bouton.addEventListener("click", function () {
+                bouton.closest("dialog").close();
+            });
+        });
+    </script>
+{% endblock %}

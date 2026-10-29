@@ -37,6 +37,12 @@
                         class="{% if request.resolver_match.app_name == 'revisions' %}actif{% endif %}"
                     >Révisions</a>
                 </li>
+                <li>
+                    <a
+                        href="{% url 'diner:accueil' %}"
+                        class="{% if request.resolver_match.app_name == 'diner' %}actif{% endif %}"
+                    >On mange quoi ?</a>
+                </li>
             </ul>
 
             {% if points_du_mois %}
@@ -65,5 +71,6 @@
     <main class="contenu">
         {% block contenu %}{% endblock %}
     </main>
+    {% block js %}{% endblock %}
 </body>
 </html>
