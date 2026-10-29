@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Profils – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Profils du foyer</h1>
+    <p><a href="{% url 'core:profil_creer' %}">Ajouter un profil</a></p>
+    <ul class="liste-profils">
+        {% for profil in profils %}
+            <li>
+                {{ profil.first_name }}
+                — <a href="{% url 'core:profil_modifier' profil.pk %}">modifier</a>
+                — <a href="{% url 'core:profil_supprimer' profil.pk %}">supprimer</a>
+            </li>
+        {% empty %}
+            <li>Aucun profil pour l'instant.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

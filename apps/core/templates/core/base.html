@@ -10,6 +10,14 @@
 <body>
     <header>
         <a href="{% url 'core:accueil' %}">Maison</a>
+        {% if user.is_authenticated %}
+            <span class="profil-courant">{{ user.first_name }}</span>
+            <a href="{% url 'core:profils_liste' %}">Profils</a>
+            <form action="{% url 'core:deconnexion' %}" method="post" class="form-deconnexion">
+                {% csrf_token %}
+                <button type="submit">Se déconnecter</button>
+            </form>
+        {% endif %}
     </header>
     <main>
         {% block contenu %}{% endblock %}

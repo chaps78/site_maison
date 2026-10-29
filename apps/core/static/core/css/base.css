@@ -7,9 +7,46 @@ body {
     padding: 1rem;
 }
 
-header a {
+header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+header a:first-child {
     text-decoration: none;
     font-weight: bold;
+}
+
+.profil-courant {
+    margin-left: auto;
+    color: #555;
+}
+
+.form-deconnexion {
+    margin: 0;
+}
+
+.profils-connexion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.bouton-profil {
+    display: block;
+    padding: 1.5rem 2rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-size: 1.2rem;
+    text-align: center;
+    min-width: 8rem;
+}
+
+.erreur {
+    color: #b00020;
 }
 
 nav ul {

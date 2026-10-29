@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Connexion – {{ profil.first_name }}{% endblock %}
+
+{% block contenu %}
+    <h1>Bonjour {{ profil.first_name }}</h1>
+    {% if erreur %}
+        <p class="erreur">Code incorrect.</p>
+    {% endif %}
+    <form method="post" class="form-code">
+        {% csrf_token %}
+        {{ form.code.label_tag }}
+        {{ form.code }}
+        <button type="submit">Valider</button>
+    </form>
+    <p><a href="{% url 'core:connexion' %}">Ce n'est pas moi</a></p>
+{% endblock %}

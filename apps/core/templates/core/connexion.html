@@ -1,0 +1,21 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Connexion – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Qui es-tu ?</h1>
+    {% if profils %}
+        <div class="profils-connexion">
+            {% for profil in profils %}
+                <a class="bouton-profil" href="{% url 'core:connexion_code' profil.username %}">
+                    {{ profil.first_name }}
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>
+            Aucun profil n'existe encore. Il faut en créer un via
+            <code>python manage.py creer_profils_initiaux</code>.
+        </p>
+    {% endif %}
+{% endblock %}

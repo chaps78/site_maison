@@ -45,12 +45,19 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "core.User"
 
+LOGIN_URL = "core:connexion"
+LOGIN_REDIRECT_URL = "core:accueil"
+LOGOUT_REDIRECT_URL = "core:connexion"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Toutes les vues exigent une connexion par défaut (foyer partagé, pas d'inscription) ;
+    # une vue s'en exempte explicitement avec @login_not_required (ex. l'écran de connexion).
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
