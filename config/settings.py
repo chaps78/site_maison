@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "apps.core",
     "apps.recettes",
     "apps.calendrier",
+    "apps.taches",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

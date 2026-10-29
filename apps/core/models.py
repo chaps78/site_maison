@@ -19,6 +19,10 @@ class User(AbstractUser):
     # tous les profils, les autres ne peuvent changer que leur propre code.
     est_admin = models.BooleanField("administrateur du foyer", default=False)
 
+    # Autre permission indépendante, utilisée par l'app taches : un parent peut enregistrer
+    # les tâches faites par les enfants (et gérer le catalogue), un enfant peut juste consulter.
+    est_parent = models.BooleanField("parent", default=False)
+
 
 class Traced(models.Model):
     """Base des contenus partagés : le foyer voit tout, on trace juste qui a créé quoi."""

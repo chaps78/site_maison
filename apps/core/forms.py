@@ -75,11 +75,12 @@ class ProfilForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "ordre", "est_admin"]
+        fields = ["first_name", "ordre", "est_admin", "est_parent"]
         labels = {
             "first_name": "Prénom",
             "ordre": "Ordre d'affichage",
             "est_admin": "Administrateur du foyer",
+            "est_parent": "Parent (peut enregistrer les tâches des enfants)",
         }
 
     def __init__(self, *args, **kwargs):

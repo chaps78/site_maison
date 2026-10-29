@@ -2,12 +2,12 @@ from django.core.management.base import BaseCommand
 
 from apps.core.models import User
 
-# (identifiant technique, prénom affiché, ordre d'affichage, administrateur du foyer)
+# (identifiant technique, prénom affiché, ordre d'affichage, administrateur, parent)
 PROFILS_INITIAUX = [
-    ("papa", "Papa", 1, True),
-    ("maman", "Maman", 2, False),
-    ("philippe", "Philippe", 3, False),
-    ("josephine", "Joséphine", 4, False),
+    ("papa", "Papa", 1, True, True),
+    ("maman", "Maman", 2, False, True),
+    ("philippe", "Philippe", 3, False, False),
+    ("josephine", "Joséphine", 4, False, False),
 ]
 
 CODE_PAR_DEFAUT = "0000"
@@ -20,7 +20,7 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        for username, prenom, ordre, est_admin in PROFILS_INITIAUX:
+        for username, prenom, ordre, est_admin, est_parent in PROFILS_INITIAUX:
             if User.objects.filter(username=username).exists():
                 self.stdout.write(f"{prenom} existe déjà, ignoré.")
                 continue
@@ -32,6 +32,7 @@ class Command(BaseCommand):
                 ordre=ordre,
                 is_staff=False,
                 est_admin=est_admin,
+                est_parent=est_parent,
             )
             profil.set_password(CODE_PAR_DEFAUT)
             profil.save()

@@ -11,7 +11,8 @@
         {% for profil in profils %}
             <li>
                 {{ profil.first_name }}
-                {% if profil.est_admin %}<span class="badge-admin">administrateur</span>{% endif %}
+                {% if profil.est_admin %}<span class="badge">administrateur</span>{% endif %}
+                {% if profil.est_parent %}<span class="badge">parent</span>{% endif %}
                 {% if user.est_admin or profil == user %}
                     — <a href="{% url 'core:profil_modifier' profil.pk %}">modifier</a>
                 {% endif %}

@@ -49,12 +49,17 @@ header a:first-child {
     color: #b00020;
 }
 
-.badge-admin {
+.badge {
     font-size: 0.8rem;
     color: #555;
     border: 1px solid #ccc;
     border-radius: 0.3rem;
     padding: 0.1rem 0.4rem;
+}
+
+.form-inline {
+    display: inline;
+    margin: 0;
 }
 
 nav ul {

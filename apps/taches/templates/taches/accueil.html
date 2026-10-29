@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Tâches – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Tâches du jour</h1>
+    <p>
+        <a href="{% url 'taches:historique' %}">Historique et points</a>
+        —
+        <a href="{% url 'taches:catalogue' %}">Catalogue des tâches</a>
+    </p>
+
+    {% if form %}
+        <h2>Ajouter une tâche faite aujourd'hui</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Ajouter</button>
+        </form>
+    {% endif %}
+
+    <h2>Fait aujourd'hui</h2>
+    <ul class="liste-taches">
+        {% for tache in taches_du_jour %}
+            <li>
+                <strong>{{ tache.enfant.first_name }}</strong>
+                — {{ tache.type_tache.nom }} ({{ tache.type_tache.points }} pt)
+                {% if user.est_parent %}
+                    — <a href="{% url 'taches:effectuee_supprimer' tache.pk %}">supprimer</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Aucune tâche enregistrée pour l'instant aujourd'hui.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
