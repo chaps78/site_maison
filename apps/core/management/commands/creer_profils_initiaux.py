@@ -2,12 +2,12 @@ from django.core.management.base import BaseCommand
 
 from apps.core.models import User
 
-# (identifiant technique, prénom affiché, ordre d'affichage)
+# (identifiant technique, prénom affiché, ordre d'affichage, administrateur du foyer)
 PROFILS_INITIAUX = [
-    ("papa", "Papa", 1),
-    ("maman", "Maman", 2),
-    ("philippe", "Philippe", 3),
-    ("josephine", "Joséphine", 4),
+    ("papa", "Papa", 1, True),
+    ("maman", "Maman", 2, False),
+    ("philippe", "Philippe", 3, False),
+    ("josephine", "Joséphine", 4, False),
 ]
 
 CODE_PAR_DEFAUT = "0000"
@@ -20,13 +20,19 @@ class Command(BaseCommand):
     )
 
     def handle(self, *args, **options):
-        for username, prenom, ordre in PROFILS_INITIAUX:
+        for username, prenom, ordre, est_admin in PROFILS_INITIAUX:
             if User.objects.filter(username=username).exists():
                 self.stdout.write(f"{prenom} existe déjà, ignoré.")
                 continue
             # set_password() ne passe pas par AUTH_PASSWORD_VALIDATORS : c'est volontaire,
             # ces codes sont des codes à 4 chiffres, pas de vrais mots de passe (voir forms.py).
-            profil = User(username=username, first_name=prenom, ordre=ordre, is_staff=False)
+            profil = User(
+                username=username,
+                first_name=prenom,
+                ordre=ordre,
+                is_staff=False,
+                est_admin=est_admin,
+            )
             profil.set_password(CODE_PAR_DEFAUT)
             profil.save()
             self.stdout.write(

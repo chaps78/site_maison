@@ -4,13 +4,20 @@
 
 {% block contenu %}
     <h1>Profils du foyer</h1>
-    <p><a href="{% url 'core:profil_creer' %}">Ajouter un profil</a></p>
+    {% if user.est_admin %}
+        <p><a href="{% url 'core:profil_creer' %}">Ajouter un profil</a></p>
+    {% endif %}
     <ul class="liste-profils">
         {% for profil in profils %}
             <li>
                 {{ profil.first_name }}
-                — <a href="{% url 'core:profil_modifier' profil.pk %}">modifier</a>
-                — <a href="{% url 'core:profil_supprimer' profil.pk %}">supprimer</a>
+                {% if profil.est_admin %}<span class="badge-admin">administrateur</span>{% endif %}
+                {% if user.est_admin or profil == user %}
+                    — <a href="{% url 'core:profil_modifier' profil.pk %}">modifier</a>
+                {% endif %}
+                {% if user.est_admin %}
+                    — <a href="{% url 'core:profil_supprimer' profil.pk %}">supprimer</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>Aucun profil pour l'instant.</li>

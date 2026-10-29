@@ -49,6 +49,14 @@ header a:first-child {
     color: #b00020;
 }
 
+.badge-admin {
+    font-size: 0.8rem;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.4rem;
+}
+
 nav ul {
     list-style: none;
     padding: 0;

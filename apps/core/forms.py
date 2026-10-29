@@ -34,8 +34,28 @@ class ConnexionForm(forms.Form):
     )
 
 
+class CodeForm(forms.Form):
+    """Formulaire réduit : un profil non-administrateur ne peut changer que son propre code."""
+
+    code = forms.CharField(
+        label="Nouveau code à 4 chiffres",
+        widget=forms.PasswordInput(attrs={"inputmode": "numeric", "maxlength": 4}),
+        validators=[valide_code],
+    )
+    code_confirmation = forms.CharField(
+        label="Confirmation du code",
+        widget=forms.PasswordInput(attrs={"inputmode": "numeric", "maxlength": 4}),
+    )
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get("code") and cleaned.get("code") != cleaned.get("code_confirmation"):
+            self.add_error("code_confirmation", "Les deux codes ne correspondent pas.")
+        return cleaned
+
+
 class ProfilForm(forms.ModelForm):
-    """Création/modification d'un profil du foyer (CRUD séparé de l'admin Django).
+    """Création/modification d'un profil par un administrateur du foyer (voir est_admin).
 
     Ne manipule jamais de compte is_staff/is_superuser : ceux-là restent gérés par /admin/.
     """
@@ -55,8 +75,12 @@ class ProfilForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name", "ordre"]
-        labels = {"first_name": "Prénom", "ordre": "Ordre d'affichage"}
+        fields = ["first_name", "ordre", "est_admin"]
+        labels = {
+            "first_name": "Prénom",
+            "ordre": "Ordre d'affichage",
+            "est_admin": "Administrateur du foyer",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

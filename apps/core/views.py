@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_not_required, login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from .forms import ConnexionForm, ProfilForm
+from .forms import CodeForm, ConnexionForm, ProfilForm
 from .models import User
 
 
@@ -51,13 +52,19 @@ def deconnexion(request):
 
 @login_required
 def profils_liste(request):
-    """CRUD des profils du foyer : volontairement séparé de /admin/ (voir ProfilForm)."""
+    """CRUD des profils du foyer : volontairement séparé de /admin/ (voir ProfilForm).
+
+    Visible par tout le monde (foyer partagé), mais seul un administrateur (est_admin) voit
+    les actions d'ajout/suppression et peut modifier le profil de quelqu'un d'autre.
+    """
     profils = User.objects.filter(is_staff=False).order_by("ordre", "first_name")
     return render(request, "core/profils_liste.html", {"profils": profils})
 
 
 @login_required
 def profil_creer(request):
+    if not request.user.est_admin:
+        raise PermissionDenied("Seul un administrateur du foyer peut ajouter un profil.")
     form = ProfilForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
@@ -67,10 +74,25 @@ def profil_creer(request):
 
 @login_required
 def profil_modifier(request, pk):
+    """Un administrateur modifie n'importe quel profil ; les autres, seulement le leur
+    (et seulement leur code, pas leur prénom ni leur statut : voir CodeForm)."""
     profil = get_object_or_404(User, pk=pk, is_staff=False)
-    form = ProfilForm(request.POST or None, instance=profil)
+    est_admin = request.user.est_admin
+    est_soi_meme = profil.pk == request.user.pk
+    if not est_admin and not est_soi_meme:
+        raise PermissionDenied("Tu ne peux changer que ton propre code.")
+
+    if est_admin:
+        form = ProfilForm(request.POST or None, instance=profil)
+    else:
+        form = CodeForm(request.POST or None)
+
     if request.method == "POST" and form.is_valid():
-        form.save()
+        if est_admin:
+            form.save()
+        else:
+            profil.set_password(form.cleaned_data["code"])
+            profil.save()
         return redirect("core:profils_liste")
     return render(
         request,
@@ -81,6 +103,8 @@ def profil_modifier(request, pk):
 
 @login_required
 def profil_supprimer(request, pk):
+    if not request.user.est_admin:
+        raise PermissionDenied("Seul un administrateur du foyer peut supprimer un profil.")
     profil = get_object_or_404(User, pk=pk, is_staff=False)
     # On évite qu'une personne se supprime elle-même en cours de session
     # (elle resterait connectée avec un compte qui n'existe plus dans la liste).
