@@ -67,9 +67,23 @@ def test_sans_quiz_en_session_la_page_de_jeu_redirige_vers_la_config(client, phi
 
 
 @pytest.mark.django_db
-def test_la_matrice_de_statistiques_s_affiche(client, philippe, josephine):
+def test_un_parent_voit_la_matrice_de_statistiques(client, maman, josephine):
     StatistiqueMultiplication.enregistrer_resultat(josephine, 6, 8, reussi=True)
-    client.force_login(philippe)
+    client.force_login(maman)
     reponse = client.get(reverse("revisions:multiplication_statistiques"))
     assert reponse.status_code == 200
     assert "Joséphine" in reponse.content.decode()
+
+
+@pytest.mark.django_db
+def test_un_enfant_ne_voit_pas_les_statistiques(client, philippe):
+    client.force_login(philippe)
+    reponse = client.get(reverse("revisions:multiplication_statistiques"))
+    assert reponse.status_code == 403
+
+
+@pytest.mark.django_db
+def test_le_lien_statistiques_est_cache_pour_un_enfant(client, philippe):
+    client.force_login(philippe)
+    reponse = client.get(reverse("revisions:multiplication_config"))
+    assert "Voir les statistiques" not in reponse.content.decode()

@@ -9,8 +9,10 @@
     <p>
         <a href="{% url 'revisions:multiplication_config' %}">Recommencer</a>
         —
-        <a href="{% url 'revisions:multiplication_statistiques' %}">Voir les statistiques</a>
-        —
+        {% if user.est_parent %}
+            <a href="{% url 'revisions:multiplication_statistiques' %}">Voir les statistiques</a>
+            —
+        {% endif %}
         <a href="{% url 'revisions:accueil' %}">Retour aux révisions</a>
     </p>
 {% endblock %}

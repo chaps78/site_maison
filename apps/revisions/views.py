@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
@@ -98,7 +99,12 @@ def multiplication_resultat(request):
 
 @login_required
 def multiplication_statistiques(request):
-    """Matrice de réussite (table × table) pour chaque enfant du foyer."""
+    """Matrice de réussite (table × table) pour chaque enfant du foyer.
+
+    Le quiz lui-même est ouvert à tous, mais seuls les parents consultent les statistiques.
+    """
+    if not request.user.est_parent:
+        raise PermissionDenied("Seul un parent peut consulter les statistiques.")
     tables = range(1, 11)
     enfants = User.objects.filter(is_staff=False, est_parent=False).order_by("ordre", "first_name")
     matrices = []
