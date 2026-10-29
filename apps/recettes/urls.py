@@ -19,4 +19,6 @@ urlpatterns = [
         views.type_ingredient_supprimer,
         name="type_ingredient_supprimer",
     ),
+    path("<int:pk>/", views.recette_detail, name="recette_detail"),
+    path("<int:pk>/modifier/", views.recette_modifier, name="recette_modifier"),
 ]

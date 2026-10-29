@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+
+{% block titre %}{{ recette.titre }} – Recettes{% endblock %}
+
+{% block contenu %}
+    <h1>{{ recette.titre }}</h1>
+
+    <h2>Ingrédients</h2>
+    <ul class="liste-catalogue">
+        {% for ingredient in recette.ingredients.all %}
+            <li>
+                {{ ingredient.type_ingredient.nom }}
+                {% if ingredient.quantite %}
+                    — {{ ingredient.quantite }} {{ ingredient.unite_affichee }}
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Aucun ingrédient renseigné.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Commentaires</h2>
+    {% if recette.description %}
+        {{ recette.description|linebreaks }}
+    {% else %}
+        <p>Aucun commentaire.</p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'recettes:recette_modifier' recette.pk %}">Modifier</a>
+        —
+        <a href="{% url 'recettes:liste' %}">Retour aux recettes</a>
+    </p>
+{% endblock %}

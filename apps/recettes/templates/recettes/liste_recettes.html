@@ -11,7 +11,7 @@
     </p>
     <ul class="liste-catalogue">
         {% for recette in recettes %}
-            <li>{{ recette.titre }}</li>
+            <li><a href="{% url 'recettes:recette_detail' recette.pk %}">{{ recette.titre }}</a></li>
         {% empty %}
             <li>Aucune recette pour l'instant.</li>
         {% endfor %}

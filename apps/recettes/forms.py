@@ -42,8 +42,15 @@ class IngredientForm(forms.ModelForm):
         labels = {"quantite": "Quantité"}
 
 
-# 10 lignes vides par défaut : pas de JS pour ajouter des lignes dynamiquement, les
-# lignes laissées entièrement vides sont simplement ignorées à l'enregistrement.
-IngredientFormSet = inlineformset_factory(
+# Création : 10 lignes vides, pas de case « supprimer » (rien à supprimer encore).
+# Pas de JS pour ajouter des lignes dynamiquement : les lignes laissées entièrement
+# vides sont simplement ignorées à l'enregistrement.
+IngredientFormSetCreation = inlineformset_factory(
     Recette, Ingredient, form=IngredientForm, extra=10, can_delete=False
+)
+
+# Modification : 3 lignes vides en plus des ingrédients existants, avec une case
+# « supprimer » par ligne existante pour retirer un ingrédient de la recette.
+IngredientFormSetModification = inlineformset_factory(
+    Recette, Ingredient, form=IngredientForm, extra=3, can_delete=True
 )

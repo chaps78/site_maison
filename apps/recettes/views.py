@@ -2,7 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import ProtectedError
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import IngredientFormSet, RecetteForm, TypeIngredientForm
+from .forms import (
+    IngredientFormSetCreation,
+    IngredientFormSetModification,
+    RecetteForm,
+    TypeIngredientForm,
+)
 from .models import Recette, TypeIngredient
 
 
@@ -13,19 +18,49 @@ def liste_recettes(request):
 
 
 @login_required
+def recette_detail(request, pk):
+    """Titre, ingrédients et commentaire d'une recette, avec un bouton Modifier."""
+    recette = get_object_or_404(Recette, pk=pk)
+    return render(request, "recettes/recette_detail.html", {"recette": recette})
+
+
+@login_required
 def recette_creer(request):
     """Création d'une recette : titre, commentaires, et jusqu'à 10 lignes d'ingrédients."""
     recette_form = RecetteForm(request.POST or None)
-    formset = IngredientFormSet(request.POST or None, instance=Recette())
+    formset = IngredientFormSetCreation(request.POST or None, instance=Recette())
     if request.method == "POST" and recette_form.is_valid() and formset.is_valid():
         recette = recette_form.save(commit=False)
         recette.created_by = request.user
         recette.save()
         formset.instance = recette
         formset.save()
-        return redirect("recettes:liste")
+        return redirect("recettes:recette_detail", pk=recette.pk)
     return render(
-        request, "recettes/recette_form.html", {"recette_form": recette_form, "formset": formset}
+        request,
+        "recettes/recette_form.html",
+        {"recette_form": recette_form, "formset": formset, "titre": "Créer une recette"},
+    )
+
+
+@login_required
+def recette_modifier(request, pk):
+    """Modification d'une recette existante : mêmes champs que la création."""
+    recette = get_object_or_404(Recette, pk=pk)
+    recette_form = RecetteForm(request.POST or None, instance=recette)
+    formset = IngredientFormSetModification(request.POST or None, instance=recette)
+    if request.method == "POST" and recette_form.is_valid() and formset.is_valid():
+        recette_form.save()
+        formset.save()
+        return redirect("recettes:recette_detail", pk=recette.pk)
+    return render(
+        request,
+        "recettes/recette_form.html",
+        {
+            "recette_form": recette_form,
+            "formset": formset,
+            "titre": f"Modifier « {recette.titre} »",
+        },
     )
 
 

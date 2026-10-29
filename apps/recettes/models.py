@@ -89,3 +89,10 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return str(self.type_ingredient)
+
+    @property
+    def unite_affichee(self):
+        """Le symbole d'unité (g, kg, l, cl), vide pour une simple quantité (« 4 œufs »)."""
+        if self.type_ingredient.quantification == TypeIngredient.Quantification.QUANTITE:
+            return ""
+        return self.type_ingredient.quantification
