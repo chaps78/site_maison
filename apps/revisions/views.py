@@ -3,14 +3,17 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db.models import Avg, F
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from apps.core.models import User
 
 from .couleurs import couleur_pour_taux
 from .forms import ChoixTablesForm
-from .models import StatistiqueMultiplication
+from .models import ResultatAccentuation, StatistiqueMultiplication
 
 CLE_SESSION = "quiz_multiplication"
 NB_QUESTIONS = 10
@@ -126,3 +129,44 @@ def multiplication_statistiques(request):
         "revisions/multiplication_statistiques.html",
         {"matrices": matrices, "tables": tables},
     )
+
+
+@login_required
+def accentuation_jouer(request):
+    """Page du jeu « agudas, graves y esdrújulas » : tout se joue en JS côté client,
+    cette vue ne fait que servir la page (voir accentuation_enregistrer pour le score)."""
+    return render(request, "revisions/accentuation_jouer.html")
+
+
+@login_required
+@require_POST
+def accentuation_enregistrer(request):
+    """Appelée en JS (fetch) à la fin d'une partie, pour enregistrer le score obtenu."""
+    try:
+        score = int(request.POST.get("score", ""))
+        total = int(request.POST.get("total", ""))
+    except ValueError:
+        return HttpResponseBadRequest("score/total invalides")
+    ResultatAccentuation.objects.create(created_by=request.user, score=score, total=total)
+    return JsonResponse({"ok": True})
+
+
+@login_required
+def accentuation_statistiques(request):
+    """Moyenne des résultats par enfant, réservée aux parents (comme pour les tables)."""
+    if not request.user.est_parent:
+        raise PermissionDenied("Seul un parent peut consulter les statistiques.")
+    enfants = User.objects.filter(is_staff=False, est_parent=False).order_by("ordre", "first_name")
+    resultats = []
+    for enfant in enfants:
+        parties = ResultatAccentuation.objects.filter(created_by=enfant)
+        moyenne = parties.aggregate(moyenne=Avg(F("score") * 100.0 / F("total")))["moyenne"]
+        resultats.append(
+            {
+                "enfant": enfant,
+                "nb_parties": parties.count(),
+                "moyenne": round(moyenne) if moyenne is not None else None,
+                "dernieres": parties.order_by("-created_at")[:10],
+            }
+        )
+    return render(request, "revisions/accentuation_statistiques.html", {"resultats": resultats})

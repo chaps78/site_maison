@@ -18,4 +18,13 @@ urlpatterns = [
         views.multiplication_statistiques,
         name="multiplication_statistiques",
     ),
+    path("accentuation/", views.accentuation_jouer, name="accentuation_jouer"),
+    path(
+        "accentuation/enregistrer/", views.accentuation_enregistrer, name="accentuation_enregistrer"
+    ),
+    path(
+        "accentuation/statistiques/",
+        views.accentuation_statistiques,
+        name="accentuation_statistiques",
+    ),
 ]

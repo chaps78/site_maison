@@ -1,6 +1,26 @@
 from django.conf import settings
 from django.db import models
 
+from apps.core.models import Traced
+
+
+class ResultatAccentuation(Traced):
+    """Un résultat de partie (un « round » de 10 mots) de l'exercice d'accentuation.
+
+    Traced.created_by porte déjà qui a joué ; pas besoin d'un champ « enfant » séparé.
+    """
+
+    score = models.PositiveSmallIntegerField("score")
+    total = models.PositiveSmallIntegerField("total", default=10)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "résultat d'accentuation"
+        verbose_name_plural = "résultats d'accentuation"
+
+    def __str__(self):
+        return f"{self.created_by} : {self.score}/{self.total}"
+
 
 class StatistiqueMultiplication(models.Model):
     """Taux de réussite d'un enfant sur un fait de multiplication donné.
