@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Statistiques – Révisions{% endblock %}
+
+{% block contenu %}
+    <h1>Statistiques des tables de multiplication</h1>
+    <p>Taux de réussite par fait (3×7 et 7×3 comptent ensemble).</p>
+
+    {% for matrice in matrices %}
+        <h2>{{ matrice.enfant.first_name }}</h2>
+        <table class="matrice-multiplication">
+            <tr>
+                <th></th>
+                {% for b in tables %}<th>{{ b }}</th>{% endfor %}
+            </tr>
+            {% for ligne in matrice.lignes %}
+                <tr>
+                    <th>{{ ligne.a }}</th>
+                    {% for cellule in ligne.cellules %}
+                        <td style="background-color: {{ cellule.couleur }}">
+                            {% if cellule.taux is not None %}{{ cellule.taux }}%{% else %}–{% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% empty %}
+        <p>Aucun enfant pour l'instant.</p>
+    {% endfor %}
+
+    <p><a href="{% url 'revisions:accueil' %}">Retour aux révisions</a></p>
+{% endblock %}

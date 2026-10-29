@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Historique – Tâches{% endblock %}
+
+{% block contenu %}
+    <h1>{{ premier_jour_du_mois|date:"F Y" }}</h1>
+    <p>
+        <a href="?annee={{ mois_precedent.year }}&mois={{ mois_precedent.month }}">
+            ← Mois précédent
+        </a>
+        —
+        <a href="?annee={{ mois_suivant.year }}&mois={{ mois_suivant.month }}">
+            Mois suivant →
+        </a>
+    </p>
+
+    <h2>Total du mois</h2>
+    <ul class="totaux-points">
+        {% for enfant in enfants_totaux %}
+            <li><strong>{{ enfant.first_name }}</strong> : {{ enfant.total }} point{{ enfant.total|pluralize }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Détail</h2>
+    <ul class="liste-taches">
+        {% for tache in taches_du_mois %}
+            <li>
+                {{ tache.date|date:"d/m" }} — <strong>{{ tache.enfant.first_name }}</strong>
+                — {{ tache.type_tache.nom }} ({{ tache.type_tache.points }} pt)
+                {% if user.est_parent %}
+                    — <a href="{% url 'taches:effectuee_supprimer' tache.pk %}">supprimer</a>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Aucune tâche enregistrée ce mois-ci.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

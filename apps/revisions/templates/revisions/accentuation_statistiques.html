@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Statistiques accentuation – Révisions{% endblock %}
+
+{% block contenu %}
+    <h1>Accentuation espagnole – statistiques</h1>
+
+    {% for resultat in resultats %}
+        <h2>{{ resultat.enfant.first_name }}</h2>
+        {% if resultat.nb_parties %}
+            <p>
+                <strong>{{ resultat.moyenne }}%</strong> de moyenne
+                sur {{ resultat.nb_parties }} partie{{ resultat.nb_parties|pluralize }}.
+            </p>
+            <ul class="liste-taches">
+                {% for partie in resultat.dernieres %}
+                    <li>
+                        {{ partie.created_at|date:"d/m/Y H:i" }} — {{ partie.score }}/{{ partie.total }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucune partie jouée pour l'instant.</p>
+        {% endif %}
+    {% empty %}
+        <p>Aucun enfant pour l'instant.</p>
+    {% endfor %}
+
+    <p><a href="{% url 'revisions:accueil' %}">Retour aux révisions</a></p>
+{% endblock %}

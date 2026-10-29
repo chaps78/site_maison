@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titre %}Maison{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}avec-menu{% else %}sans-menu{% endif %}">
+    {% if user.is_authenticated %}
+        <nav class="menu-lateral">
+            <a href="{% url 'core:accueil' %}" class="logo">Maison</a>
+
+            <ul class="liens-navigation">
+                <li>
+                    <a
+                        href="{% url 'recettes:liste' %}"
+                        class="{% if request.resolver_match.app_name == 'recettes' %}actif{% endif %}"
+                    >Recettes</a>
+                </li>
+                <li>
+                    <a
+                        href="{% url 'calendrier:vue' %}"
+                        class="{% if request.resolver_match.app_name == 'calendrier' %}actif{% endif %}"
+                    >Calendrier</a>
+                </li>
+                <li>
+                    <a
+                        href="{% url 'taches:accueil' %}"
+                        class="{% if request.resolver_match.app_name == 'taches' %}actif{% endif %}"
+                    >Tâches</a>
+                </li>
+                <li>
+                    <a
+                        href="{% url 'revisions:accueil' %}"
+                        class="{% if request.resolver_match.app_name == 'revisions' %}actif{% endif %}"
+                    >Révisions</a>
+                </li>
+            </ul>
+
+            {% if points_du_mois %}
+                <div class="points-du-mois">
+                    <h2>Points du mois</h2>
+                    <ul>
+                        {% for enfant in points_du_mois %}
+                            <li><span>{{ enfant.first_name }}</span><strong>{{ enfant.total }}</strong></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="bas-du-menu">
+                <a
+                    href="{% url 'core:profils_liste' %}"
+                    class="{% if request.resolver_match.url_name == 'profils_liste' %}actif{% endif %}"
+                >{{ user.first_name }} · Profils</a>
+                <form action="{% url 'core:deconnexion' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Se déconnecter</button>
+                </form>
+            </div>
+        </nav>
+    {% endif %}
+    <main class="contenu">
+        {% block contenu %}{% endblock %}
+    </main>
+</body>
+</html>

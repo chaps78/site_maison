@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Supprimer une tâche{% endblock %}
+
+{% block contenu %}
+    <h1>Supprimer cette tâche ?</h1>
+    <p>
+        {{ tache.type_tache.nom }} — {{ tache.enfant.first_name }} — le
+        {{ tache.date|date:"d/m/Y" }}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la suppression</button>
+    </form>
+    <p><a href="{% url 'taches:accueil' %}">Annuler</a></p>
+{% endblock %}

@@ -1,0 +1,342 @@
+/* Style commun à toutes les pages : variables de couleur, menu latéral, composants simples.
+   Volontairement en CSS brut (pas de framework) : pas de chaîne de build JS sur ce projet. */
+
+:root {
+    --couleur-fond: #f4f6f8;
+    --couleur-surface: #ffffff;
+    --couleur-texte: #1f2328;
+    --couleur-texte-discret: #6b7280;
+    --couleur-bordure: #e2e5e9;
+    --couleur-accent: #2563eb;
+    --couleur-accent-clair: #eaf0fe;
+    --couleur-erreur: #b00020;
+    --rayon: 0.6rem;
+    --ombre: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    background: var(--couleur-fond);
+    color: var(--couleur-texte);
+    line-height: 1.5;
+}
+
+h1, h2 {
+    margin-top: 0;
+}
+
+a {
+    color: var(--couleur-accent);
+}
+
+/* --- Mise en page avec menu latéral (une fois connecté) --- */
+
+body.avec-menu {
+    display: flex;
+    min-height: 100vh;
+}
+
+.menu-lateral {
+    width: 14rem;
+    flex-shrink: 0;
+    background: var(--couleur-surface);
+    border-right: 1px solid var(--couleur-bordure);
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.menu-lateral .logo {
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--couleur-texte);
+}
+
+.liens-navigation {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.liens-navigation a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--rayon);
+    text-decoration: none;
+    color: var(--couleur-texte);
+    font-weight: 500;
+}
+
+.liens-navigation a:hover {
+    background: var(--couleur-accent-clair);
+}
+
+.liens-navigation a.actif {
+    background: var(--couleur-accent-clair);
+    color: var(--couleur-accent);
+}
+
+.points-du-mois {
+    background: var(--couleur-fond);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    padding: 0.75rem;
+}
+
+.points-du-mois h2 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--couleur-texte-discret);
+    margin-bottom: 0.5rem;
+}
+
+.points-du-mois ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.points-du-mois li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+.points-du-mois strong {
+    color: var(--couleur-accent);
+}
+
+.bas-du-menu {
+    margin-top: auto;
+    border-top: 1px solid var(--couleur-bordure);
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.bas-du-menu a {
+    color: var(--couleur-texte);
+    text-decoration: none;
+}
+
+.bas-du-menu button {
+    background: none;
+    border: none;
+    color: var(--couleur-texte-discret);
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: left;
+}
+
+.bas-du-menu button:hover {
+    color: var(--couleur-erreur);
+    opacity: 1;
+}
+
+.contenu {
+    flex: 1;
+    padding: 2rem;
+    max-width: 48rem;
+}
+
+/* --- Page sans menu (écrans de connexion) --- */
+
+body.sans-menu .contenu {
+    max-width: 30rem;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Boutons de profil (écran de connexion) --- */
+
+.profils-connexion {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.bouton-profil {
+    display: block;
+    padding: 1.5rem 2rem;
+    background: var(--couleur-surface);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    box-shadow: var(--ombre);
+    text-decoration: none;
+    color: var(--couleur-texte);
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 8rem;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.bouton-profil:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
+/* --- Formulaires et boutons --- */
+
+input, select, button, textarea {
+    font: inherit;
+}
+
+input[type="text"], input[type="password"], input[type="number"], select, textarea {
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    background: var(--couleur-surface);
+    color: var(--couleur-texte);
+    width: 100%;
+    max-width: 20rem;
+}
+
+button, input[type="submit"] {
+    background: var(--couleur-accent);
+    color: white;
+    border: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--rayon);
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover, input[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+.form-inline {
+    display: inline;
+    margin: 0;
+}
+
+/* --- Divers --- */
+
+.erreur {
+    color: var(--couleur-erreur);
+}
+
+.badge {
+    font-size: 0.75rem;
+    color: var(--couleur-texte-discret);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 999px;
+    padding: 0.1rem 0.5rem;
+}
+
+/* Listes « carte » utilisées dans profils, tâches, catalogue... */
+ul.liste-profils,
+ul.liste-taches,
+ul.liste-catalogue,
+ul.totaux-points,
+ul.liste-exercices {
+    list-style: none;
+    padding: 0;
+}
+
+ul.liste-profils li,
+ul.liste-taches li,
+ul.liste-catalogue li,
+ul.totaux-points li,
+ul.liste-exercices li {
+    background: var(--couleur-surface);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: var(--rayon);
+    padding: 0.6rem 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+/* --- Révisions : quiz de tables de multiplication --- */
+
+.choix-tables {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    max-width: 20rem;
+    margin-bottom: 1rem;
+}
+
+.progression {
+    color: var(--couleur-texte-discret);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.question-multiplication {
+    font-size: 3rem;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.form-reponse {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.form-reponse input[type="number"] {
+    font-size: 1.5rem;
+    max-width: 8rem;
+}
+
+.score {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--couleur-accent);
+}
+
+table.matrice-multiplication {
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+table.matrice-multiplication th,
+table.matrice-multiplication td {
+    border: 1px solid var(--couleur-bordure);
+    padding: 0.4rem 0.6rem;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+table.matrice-multiplication th {
+    background: var(--couleur-fond);
+    color: var(--couleur-texte-discret);
+}
+
+/* --- Petit écran : le menu passe au-dessus du contenu plutôt qu'à côté --- */
+
+@media (max-width: 40rem) {
+    body.avec-menu {
+        flex-direction: column;
+    }
+
+    .menu-lateral {
+        width: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--couleur-bordure);
+    }
+
+    .contenu {
+        padding: 1.25rem;
+    }
+}

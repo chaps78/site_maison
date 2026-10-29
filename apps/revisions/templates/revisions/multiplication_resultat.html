@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Résultat – Révisions{% endblock %}
+
+{% block contenu %}
+    <h1>Résultat</h1>
+    <p class="score">{{ reussites }} / {{ total }} bonnes réponses</p>
+    <p>Temps moyen de réponse : {{ temps_moyen }} seconde{{ temps_moyen|pluralize }}</p>
+    <p>
+        <a href="{% url 'revisions:multiplication_config' %}">Recommencer</a>
+        —
+        {% if user.est_parent %}
+            <a href="{% url 'revisions:multiplication_statistiques' %}">Voir les statistiques</a>
+            —
+        {% endif %}
+        <a href="{% url 'revisions:accueil' %}">Retour aux révisions</a>
+    </p>
+{% endblock %}

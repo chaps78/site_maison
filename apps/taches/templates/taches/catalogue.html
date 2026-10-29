@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Catalogue des tâches{% endblock %}
+
+{% block contenu %}
+    <h1>Catalogue des tâches</h1>
+    {% if user.est_parent %}
+        <p><a href="{% url 'taches:catalogue_ajouter' %}">Ajouter une tâche</a></p>
+    {% endif %}
+    <ul class="liste-catalogue">
+        {% for type_tache in types %}
+            <li>
+                {{ type_tache.nom }} — {{ type_tache.points }} point{{ type_tache.points|pluralize }}
+                {% if not type_tache.actif %}<span class="badge">inactive</span>{% endif %}
+                {% if user.est_parent %}
+                    — <a href="{% url 'taches:catalogue_modifier' type_tache.pk %}">modifier</a>
+                    — <form
+                        action="{% url 'taches:catalogue_basculer' type_tache.pk %}"
+                        method="post"
+                        class="form-inline"
+                    >
+                        {% csrf_token %}
+                        <button type="submit">
+                            {% if type_tache.actif %}désactiver{% else %}réactiver{% endif %}
+                        </button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>Aucune tâche dans le catalogue.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -10,6 +10,19 @@ class User(AbstractUser):
     très pénible, alors qu'en partir d'un modèle à nous permet d'ajouter des champs plus tard.
     """
 
+    # Ordre d'affichage des boutons sur l'écran de connexion et dans la liste des profils
+    # (is_staff=False distingue les profils du foyer du ou des comptes d'administration Django).
+    ordre = models.PositiveSmallIntegerField("ordre d'affichage", default=0)
+
+    # Permission propre au CRUD /profils/ (rien à voir avec is_staff/is_superuser, réservés
+    # au compte qui administre Django via /admin/) : un administrateur du foyer peut gérer
+    # tous les profils, les autres ne peuvent changer que leur propre code.
+    est_admin = models.BooleanField("administrateur du foyer", default=False)
+
+    # Autre permission indépendante, utilisée par l'app taches : un parent peut enregistrer
+    # les tâches faites par les enfants (et gérer le catalogue), un enfant peut juste consulter.
+    est_parent = models.BooleanField("parent", default=False)
+
 
 class Traced(models.Model):
     """Base des contenus partagés : le foyer voit tout, on trace juste qui a créé quoi."""

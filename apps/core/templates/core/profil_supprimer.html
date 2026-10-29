@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Supprimer {{ profil.first_name }} – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Supprimer {{ profil.first_name }} ?</h1>
+    {% if se_supprime_soi_meme %}
+        <p class="erreur">
+            Impossible de supprimer ton propre profil en étant connecté avec.
+            Demande à quelqu'un d'autre de le faire.
+        </p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Confirmer la suppression</button>
+        </form>
+    {% endif %}
+    <p><a href="{% url 'core:profils_liste' %}">Annuler</a></p>
+{% endblock %}

@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "apps.core",
     "apps.recettes",
     "apps.calendrier",
+    "apps.taches",
+    "apps.revisions",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,12 +47,19 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = "core.User"
 
+LOGIN_URL = "core:connexion"
+LOGIN_REDIRECT_URL = "core:accueil"
+LOGOUT_REDIRECT_URL = "core:connexion"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    # Toutes les vues exigent une connexion par défaut (foyer partagé, pas d'inscription) ;
+    # une vue s'en exempte explicitement avec @login_not_required (ex. l'écran de connexion).
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -67,6 +76,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Alimente le menu latéral (core/base.html) avec les points du mois en cours.
+                "apps.taches.context_processors.points_du_mois",
             ],
         },
     },

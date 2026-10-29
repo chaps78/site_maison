@@ -1,0 +1,23 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Révisions – Maison{% endblock %}
+
+{% block contenu %}
+    <h1>Révisions</h1>
+    <p>Choisis un exercice :</p>
+    <ul class="liste-exercices">
+        <li>
+            <a href="{% url 'revisions:multiplication_config' %}">Tables de multiplication</a>
+            {% if user.est_parent %}
+                — <a href="{% url 'revisions:multiplication_statistiques' %}">statistiques</a>
+            {% endif %}
+        </li>
+        <li>
+            <a href="{% url 'revisions:accentuation_jouer' %}">Accentuation espagnole</a>
+            {% if user.est_parent %}
+                — <a href="{% url 'revisions:accentuation_statistiques' %}">statistiques</a>
+            {% endif %}
+        </li>
+        {# Prévu pour accueillir d'autres exercices plus tard : juste une ligne + une app ici. #}
+    </ul>
+{% endblock %}

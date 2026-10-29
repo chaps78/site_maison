@@ -1,0 +1,189 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Agudas, graves y esdrújulas</title>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Andika:wght@400;700&display=swap">
+<style>
+/* Layout: una sola tarjeta-cuaderno centrada, una palabra por pantalla, botones grandes para dedos de 8 años */
+:root{
+  --bg:#eef4fb; --paper:#ffffff; --line:#cfe0f2; --ink:#1d2a3a; --muted:#5d6f86;
+  --aguda:#e2553f; --grave:#2f86d6; --esdru:#2a9d6a; --ok:#2a9d6a; --bad:#d64545;
+  --display:"Grandstander","Comic Sans MS",system-ui,sans-serif;
+  --body:"Andika","Trebuchet MS",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121a24; --paper:#1b2633; --line:#2c3c50; --ink:#eaf1f9; --muted:#9fb0c5;
+  --aguda:#f2765f; --grave:#5aa6ec; --esdru:#4cc08b; --ok:#4cc08b; --bad:#f07070; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121a24; --paper:#1b2633; --line:#2c3c50; --ink:#eaf1f9; --muted:#9fb0c5;
+  --aguda:#f2765f; --grave:#5aa6ec; --esdru:#4cc08b; --ok:#4cc08b; --bad:#f07070; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.retour{text-align:center;margin:0 0 10px;max-width:520px;margin-inline:auto}
+.retour a{color:var(--muted);text-decoration:none;font-size:.9rem}
+.card{max-width:520px;margin:0 auto;background:var(--paper);border-radius:20px;padding:24px 20px 28px;
+  background-image:repeating-linear-gradient(to bottom,transparent 0 35px,var(--line) 35px 36px);
+  box-shadow:0 2px 0 var(--line);display:flex;flex-direction:column;gap:20px}
+h1{font-family:var(--display);font-weight:800;font-size:1.5rem;margin:0;text-align:center;text-wrap:balance}
+.dots{display:flex;gap:6px;justify-content:center}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted)}
+.dot.done{background:var(--muted)}
+.dot.now{border-color:var(--grave);background:var(--grave)}
+.count{text-align:center;color:var(--muted);font-size:.95rem;margin:-10px 0 0}
+.word{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,12vw,3.6rem);text-align:center;
+  padding:24px 0;background:var(--paper);border-radius:14px}
+.q{text-align:center;margin:0;color:var(--muted)}
+.choices{display:grid;gap:12px}
+.choices button{font-family:var(--display);font-weight:600;font-size:1.35rem;padding:16px;border-radius:14px;
+  border:3px solid currentColor;background:var(--paper);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.choices button small{font-family:var(--body);font-size:.85rem;font-weight:400;color:var(--muted)}
+.choices button:active{transform:scale(.97)}
+.choices button:focus-visible,.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.b-aguda{color:var(--aguda)} .b-grave{color:var(--grave)} .b-esdru{color:var(--esdru)}
+.score{font-family:var(--display);font-weight:800;font-size:3.4rem;text-align:center;margin:0;font-variant-numeric:tabular-nums}
+.msg{text-align:center;margin:0;font-size:1.1rem}
+.errs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.errs li{background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:12px 14px}
+.errs .w{font-family:var(--display);font-weight:800;font-size:1.4rem}
+.errs .syl{letter-spacing:.04em}
+.errs .syl b{color:var(--ok);text-decoration:underline}
+.errs .why{color:var(--muted);font-size:.95rem}
+.no{color:var(--bad);text-decoration:line-through}
+.yes{color:var(--ok);font-weight:700}
+.btn{font-family:var(--display);font-weight:600;font-size:1.2rem;padding:14px;border-radius:14px;border:0;
+  background:var(--grave);color:var(--paper);cursor:pointer}
+.tip{background:var(--paper);border-radius:12px;padding:10px 14px;font-size:.95rem;color:var(--muted);margin:0}
+#repasar{background:var(--esdru)}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.steps li{background:var(--paper);border:2px solid var(--line);border-radius:12px;padding:12px 14px;line-height:1.5}
+.boxes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sb{font-family:var(--display);font-weight:600;font-size:1.3rem;padding:6px 12px;border-radius:10px;border:2px solid var(--line)}
+.sb.on{border-color:var(--ok);color:var(--ok);background:var(--bg)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<p class="retour"><a href="{% url 'revisions:accueil' %}">← Révisions</a></p>
+
+{# Jeton CSRF hors de #app : la div #app est entièrement réécrite par le JS (innerHTML),
+   ce jeton serait effacé s'il était dedans. Lu par enviarResultado() ci-dessous. #}
+{% csrf_token %}
+
+<div class="card" id="app"></div>
+
+<script>
+// URL Django appelée en fin de partie pour enregistrer le score (voir enviarResultado).
+const RUTA_GUARDAR = "{% url 'revisions:accentuation_enregistrer' %}";
+
+// sílabas: la tónica va en MAYÚSCULA
+const SILABAS = ["can-CIÓN", "ra-TÓN", "ca-FÉ", "so-FÁ", "re-LOJ", "pa-PEL", "fe-LIZ", "ca-MIÓN", "ja-BÓN", "a-VIÓN", "co-ra-ZÓN", "pa-RED", "ciu-DAD", "co-LOR", "ti-bu-RÓN", "ma-MÁ", "pa-PÁ", "bal-CÓN", "sa-LÓN", "can-TAR", "co-MER", "vi-VIR", "ju-GAR", "bai-LAR", "dor-MIR", "ca-mi-NAR", "ma-NÍ", "co-li-BRÍ", "le-ÓN", "ja-ba-LÍ", "a-RROZ", "a-ZUL", "mu-JER", "ver-DAD", "a-MOR", "sar-TÉN", "ma-le-TÍN", "bo-TÓN", "cal-ce-TÍN", "ja-RRÓN", "li-MÓN", "me-LÓN", "bom-BÓN", "pan-ta-LÓN", "ca-ra-COL", "gi-ra-SOL", "fa-ROL", "ca-ma-le-ÓN", "a-TÚN", "be-BÉ", "men-TÓN", "a-de-MÁS", "tam-BIÉN", "re-VÉS", "in-GLÉS", "fran-CÉS", "a-le-MÁN", "com-PÁS", "a-TRÁS", "des-PUÉS", "na-RIZ", "per-DIZ", "ha-BLAR", "es-cri-BIR", "pin-TOR", "doc-TOR", "mo-TOR", "ca-LOR", "sa-BOR", "tam-BOR", "ÁR-bol", "LÁ-piz", "FÁ-cil", "a-ZÚ-car", "ME-sa", "CA-sa", "LI-bro", "PE-rro", "es-CUE-la", "ven-TA-na", "CÉS-ped", "MÓ-vil", "za-PA-to", "di-FÍ-cil", "pe-LO-ta", "GA-to", "LU-na", "MA-no", "PIE-dra", "NI-ño", "ca-MI-sa", "ma-ri-PO-sa", "FÚT-bol", "Á-gil", "DÓ-lar", "ÁN-gel", "CÁR-cel", "Ú-til", "MÁR-mol", "TÚ-nel", "CRÁ-ter", "DÉ-bil", "CÓN-dor", "BÉIS-bol", "JO-ven", "e-XA-men", "ca-ra-ME-lo", "co-NE-jo", "ji-RA-fa", "e-le-FAN-te", "ca-BA-llo", "PO-llo", "ga-LLE-ta", "MA-dre", "PA-dre", "her-MA-no", "a-MI-go", "ma-ES-tra", "TIE-rra", "A-gua", "CA-ma", "SI-lla", "LE-che", "QUE-so", "man-ZA-na", "na-RAN-ja", "to-MA-te", "za-na-HO-ria", "pan-TA-lla", "ve-RA-no", "in-VIER-no", "o-TO-ño", "TRÉ-bol", "ÁM-bar", "NÉC-tar", "HÁ-bil", "FÉ-mur", "DUL-ce", "POS-tre", "TOR-ta", "GLO-bo", "mo-CHI-la", "cua-DER-no", "RE-gla", "GO-ma", "TI-za", "pi-ZA-rra", "MAR-tes", "VIER-nes", "PÁ-ja-ro", "MÚ-si-ca", "te-LÉ-fo-no", "mur-CIÉ-la-go", "LÁM-pa-ra", "MÉ-di-co", "PLÁ-ta-no", "SÁ-ba-do", "BRÚ-ju-la", "re-LÁM-pa-go", "NÚ-me-ro", "QUÍ-mi-ca", "ÁR-bo-les", "LÁ-pi-ces", "MÁ-gi-co", "PÚ-bli-co", "RÁ-pi-do", "CÁ-ma-ra", "LÁ-gri-ma", "HÍ-ga-do", "MÁ-qui-na", "PÁ-gi-na", "SÍ-la-ba", "ÚL-ti-mo", "PRÓ-xi-mo", "TÍ-tu-lo", "VÍ-bo-ra", "Á-gui-la", "SÓ-ta-no", "CÓ-mo-da", "es-TÓ-ma-go", "MÉ-to-do", "PÉ-ta-lo", "CÍR-cu-lo", "TRIÁN-gu-lo", "ar-TÍ-cu-lo", "ve-HÍ-cu-lo", "o-CÉ-a-no", "pi-RÁ-mi-de", "PÍL-do-ra", "es-PÁ-rra-go", "ma-te-MÁ-ti-ca", "LÓ-gi-co", "FÍ-si-ca", "PLÁS-ti-co", "me-CÁ-ni-co", "sim-PÁ-ti-co", "fan-TÁS-ti-co", "bo-LÍ-gra-fo", "LÁ-mi-na", "CRÉ-di-to", "DÉ-ci-mo", "MIÉR-co-les", "JÓ-ve-nes", "e-XÁ-me-nes", "Á-ni-mo", "Ó-pe-ra", "MÚS-cu-lo", "ÁN-gu-lo", "TÚ-ne-les", "CÁR-ce-les", "ÁN-ge-les", "CÉ-lu-la", "FÁ-bri-ca", "GÓN-do-la", "BÚ-fa-lo", "CÁS-ca-ra", "SÁ-ba-na", "PÁ-li-do", "TÍ-mi-do", "HÚ-me-do", "CÁN-ta-ro", "SÍM-bo-lo", "PÁ-ja-ros", "MÉ-di-ca", "ÚL-ti-ma", "SÚ-bi-to"];
+const BANCO = SILABAS.map(s=>{const p=s.split("-");const i=p.findIndex(x=>x===x.toUpperCase()&&/[A-ZÁÉÍÓÚÜÑ]/.test(x));const d=p.length-i;return [p.join("").toLowerCase(),s,d===1?"a":d===2?"g":"e"]});
+const NOMBRE={a:"aguda",g:"grave",e:"esdrújula"};
+const REGLA={
+ a:"La fuerza está en la última sílaba.",
+ g:"La fuerza está en la penúltima sílaba.",
+ e:"La fuerza está en la antepenúltima sílaba (¡siempre llevan tilde!)."
+};
+const app=document.getElementById("app");
+let ronda=[],i=0,resp=[];
+
+function mezclar(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function nuevaRonda(){
+  const por=t=>mezclar(BANCO.filter(w=>w[2]===t));
+  const tipos=mezclar(["a","g","e"]); // 4 de un tipo, 3 de los otros
+  ronda=mezclar([...por(tipos[0]).slice(0,4),...por(tipos[1]).slice(0,3),...por(tipos[2]).slice(0,3)]);
+  i=0;resp=[];pregunta();
+}
+function puntos(){return ronda.map((_,k)=>`<span class="dot ${k<i?"done":k===i?"now":""}"></span>`).join("")}
+function pregunta(){
+  const w=ronda[i];
+  app.innerHTML=`<h1>Agudas, graves y esdrújulas</h1>
+  <div class="dots" aria-hidden="true">${puntos()}</div>
+  <p class="count">Palabra ${i+1} de ${ronda.length}</p>
+  <div class="word">${w[0]}</div>
+  <p class="q">Leela en voz alta y aplaudí cada sílaba. ¿Dónde suena más fuerte?</p>
+  <div class="choices">
+    <button id="op-a" class="b-aguda" data-t="a">Aguda <small>última</small></button>
+    <button id="op-g" class="b-grave" data-t="g">Grave <small>penúltima</small></button>
+    <button id="op-e" class="b-esdru" data-t="e">Esdrújula <small>antepenúltima</small></button>
+  </div>`;
+  app.querySelectorAll(".choices button").forEach(b=>b.onclick=()=>{
+    resp.push(b.dataset.t); i++;
+    i<ronda.length?pregunta():final();
+  });
+}
+function silabas(s){return s.split("-").map(x=>x===x.toUpperCase()&&/[A-ZÁÉÍÓÚ]/.test(x)?`<b>${x.toLowerCase()}</b>`:x).join(" · ")}
+
+// Envoyée en fin de partie, pour que les parents voient la moyenne des résultats
+// (/revisions/accentuation/statistiques/). Non bloquant : si ça échoue, le jeu continue.
+function enviarResultado(bien, total){
+  const token = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  fetch(RUTA_GUARDAR, {
+    method: "POST",
+    headers: {"X-CSRFToken": token, "Content-Type": "application/x-www-form-urlencoded"},
+    body: `score=${bien}&total=${total}`
+  }).catch(()=>{});
+}
+
+function final(){
+  const errores=ronda.map((w,k)=>({w,dijo:resp[k]})).filter(o=>o.dijo!==o.w[2]);
+  const bien=ronda.length-errores.length;
+  enviarResultado(bien, ronda.length);
+  const msg=bien===10?"¡Perfecto! ¡Sos un campeón de las tildes! 🏆":bien>=8?"¡Muy bien! Casi todo perfecto.":bien>=5?"¡Bien! Repasemos las que fallaste.":"¡A practicar un poco más, vos podés!";
+  app.innerHTML=`<h1>¡Terminaste!</h1>
+  <p class="score">${bien} / ${ronda.length}</p>
+  <p class="msg">${msg}</p>
+  ${errores.length?`<ul class="errs">${errores.map(o=>`<li>
+     <div class="w">${o.w[0]}</div>
+     <div class="syl">${silabas(o.w[1])}</div>
+     <div>Elegiste <span class="no">${NOMBRE[o.dijo]}</span> → es <span class="yes">${NOMBRE[o.w[2]]}</span></div>
+     <div class="why">${REGLA[o.w[2]]}</div></li>`).join("")}</ul>`:""}
+  <p class="tip">Truco: la sílaba subrayada es la que suena más fuerte.</p>
+  ${errores.length?`<button class="btn" id="repasar">Repasar mis errores uno por uno</button>`:""}
+  <button class="btn" id="otra">Jugar otra vez</button>`;
+  document.getElementById("otra").onclick=nuevaRonda;
+  if(errores.length) document.getElementById("repasar").onclick=()=>repaso(errores,0);
+}
+const POS={1:"última",2:"penúltima",3:"antepenúltima"};
+function explicar(w){
+  const [pal,sil,t]=w, partes=sil.split("-");
+  const n=partes.length, idx=partes.findIndex(x=>x===x.toUpperCase()&&/[A-ZÁÉÍÓÚ]/.test(x));
+  const desdeFin=n-idx; // 1 = última
+  const conTilde=/[áéíóú]/.test(pal);
+  const fin=pal.slice(-1), finNSV=/[nsaeiouáéíóú]/.test(fin);
+  const finTxt=/[aeiouáéíóú]/.test(fin)?`vocal (${fin})`:`“${fin}”`;
+  const cajas=partes.map((x,k)=>`<span class="sb${k===idx?" on":""}">${x.toLowerCase()}</span>`).join("");
+  const pasos=[
+    `<b>1. Separo en sílabas:</b> la palabra tiene ${n} sílabas.<div class="boxes">${cajas}</div>`,
+    `<b>2. Busco la que suena más fuerte:</b> es <b>${partes[idx].toLowerCase()}</b>. Contando desde el final, es la <b>${POS[desdeFin]}</b>.`,
+    `<b>3. Entonces es ${NOMBRE[t]}:</b> ${REGLA[t]}`
+  ];
+  let tilde;
+  if(t==="a") tilde=`Las agudas llevan tilde cuando terminan en <b>n, s o vocal</b>. “${pal}” termina en ${finTxt}, por eso ${conTilde?"<b>lleva tilde</b>":"<b>no lleva tilde</b>"}.`;
+  else if(t==="g") tilde=`Las graves llevan tilde cuando <b>no</b> terminan en n, s o vocal. “${pal}” termina en ${finTxt}, por eso ${conTilde?"<b>lleva tilde</b>":"<b>no lleva tilde</b>"}.`;
+  else tilde=`Las esdrújulas <b>siempre</b> llevan tilde, sin excepción. Por eso “${pal}” la lleva.`;
+  pasos.push(`<b>4. ¿Y la tilde?</b> ${tilde}`);
+  return pasos;
+}
+function repaso(errores,k){
+  const o=errores[k], pasos=explicar(o.w), ultimo=k===errores.length-1;
+  app.innerHTML=`<h1>Repaso ${k+1} de ${errores.length}</h1>
+  <div class="word">${o.w[0]}</div>
+  <p class="msg">Elegiste <span class="no">${NOMBRE[o.dijo]}</span> pero es <span class="yes">${NOMBRE[o.w[2]]}</span>.</p>
+  <ol class="steps">${pasos.map(p=>`<li>${p}</li>`).join("")}</ol>
+  <button class="btn" id="sig">${ultimo?"Terminar el repaso":"Siguiente error →"}</button>`;
+  document.getElementById("sig").onclick=()=>ultimo?finRepaso():repaso(errores,k+1);
+}
+function finRepaso(){
+  app.innerHTML=`<h1>¡Repaso terminado!</h1>
+  <div class="tip"><b>Resumen de las reglas</b><br>
+  <b>Aguda</b>: fuerza en la última sílaba. Tilde si termina en n, s o vocal (canción, café).<br>
+  <b>Grave</b>: fuerza en la penúltima. Tilde si NO termina en n, s o vocal (árbol, lápiz).<br>
+  <b>Esdrújula</b>: fuerza en la antepenúltima. Siempre con tilde (pájaro, música).</div>
+  <button class="btn" id="otra">Jugar otra vez</button>`;
+  document.getElementById("otra").onclick=nuevaRonda;
+}
+nuevaRonda();
+</script>
+
+</body></html>
