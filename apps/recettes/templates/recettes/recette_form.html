@@ -26,8 +26,7 @@
             </tr>
             {% for ligne in formset %}
                 <tr>
-                    {# ligne.id : champ caché indispensable pour qu'une ligne déjà
-                       enregistrée soit reconnue comme une modification, pas un doublon. #}
+                    {# ligne.id : champ caché indispensable pour reconnaître une ligne déjà enregistrée. #}
                     <td>{{ ligne.id }}{{ ligne.type_ingredient }}</td>
                     <td>{{ ligne.quantite }}</td>
                     {% if formset.can_delete %}<td>{{ ligne.DELETE }}</td>{% endif %}
