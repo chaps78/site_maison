@@ -7,7 +7,7 @@ from apps.recettes.models import TypeIngredient
 @pytest.fixture
 def farine(db):
     return TypeIngredient.objects.create(
-        nom="Farine", quantification=TypeIngredient.Quantification.POIDS
+        nom="Farine", quantification=TypeIngredient.Quantification.KILOGRAMME
     )
 
 
@@ -24,7 +24,7 @@ def test_creer_un_type_ingredient(client, user):
     client.force_login(user)
     reponse = client.post(
         reverse("recettes:type_ingredient_creer"),
-        {"nom": "Lait", "quantification": TypeIngredient.Quantification.LITRES},
+        {"nom": "Lait", "quantification": TypeIngredient.Quantification.LITRE},
     )
     assert reponse.status_code == 302
     assert TypeIngredient.objects.filter(nom="Lait").exists()
@@ -35,7 +35,7 @@ def test_modifier_un_type_ingredient(client, user, farine):
     client.force_login(user)
     reponse = client.post(
         reverse("recettes:type_ingredient_modifier", args=[farine.pk]),
-        {"nom": "Farine de blé", "quantification": TypeIngredient.Quantification.POIDS},
+        {"nom": "Farine de blé", "quantification": TypeIngredient.Quantification.KILOGRAMME},
     )
     assert reponse.status_code == 302
     farine.refresh_from_db()

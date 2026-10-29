@@ -22,9 +22,11 @@ class TypeIngredient(models.Model):
     """
 
     class Quantification(models.TextChoices):
-        POIDS = "poids", "Poids"
-        QUANTITE = "quantite", "Quantité"
-        LITRES = "litres", "Litres"
+        GRAMME = "g", "Grammes (g)"
+        KILOGRAMME = "kg", "Kilogrammes (kg)"
+        LITRE = "l", "Litres (l)"
+        CENTILITRE = "cl", "Centilitres (cl)"
+        QUANTITE = "quantite", "Quantité (pièce)"
 
     nom = models.CharField(max_length=200, unique=True)
     quantification = models.CharField(

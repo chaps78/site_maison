@@ -68,15 +68,17 @@ def test_supprimer_l_auteur_conserve_la_recette(recette, user):
 
 
 def test_le_nom_d_un_type_ingredient_est_unique(db):
-    TypeIngredient.objects.create(nom="Farine", quantification=TypeIngredient.Quantification.POIDS)
+    TypeIngredient.objects.create(
+        nom="Farine", quantification=TypeIngredient.Quantification.KILOGRAMME
+    )
     with pytest.raises(IntegrityError), transaction.atomic():
         TypeIngredient.objects.create(
-            nom="Farine", quantification=TypeIngredient.Quantification.LITRES
+            nom="Farine", quantification=TypeIngredient.Quantification.LITRE
         )
 
 
 def test_str_type_ingredient(db):
     type_ingredient = TypeIngredient.objects.create(
-        nom="Lait", quantification=TypeIngredient.Quantification.LITRES
+        nom="Lait", quantification=TypeIngredient.Quantification.LITRE
     )
     assert str(type_ingredient) == "Lait"
