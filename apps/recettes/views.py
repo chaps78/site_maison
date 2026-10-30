@@ -65,6 +65,15 @@ def recette_modifier(request, pk):
 
 
 @login_required
+def recette_supprimer(request, pk):
+    recette = get_object_or_404(Recette, pk=pk)
+    if request.method == "POST":
+        recette.delete()
+        return redirect("recettes:liste")
+    return render(request, "recettes/recette_supprimer.html", {"recette": recette})
+
+
+@login_required
 def types_ingredients_liste(request):
     """Catalogue des ingrédients, utilisé pour composer les recettes (voir Ingredient)."""
     types = TypeIngredient.objects.all()

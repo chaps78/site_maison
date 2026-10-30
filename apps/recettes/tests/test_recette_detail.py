@@ -140,3 +140,28 @@ def test_retirer_un_ingredient_en_modifiant(client, user, recette, farine):
     client.post(reverse("recettes:recette_modifier", args=[recette.pk]), donnees)
 
     assert recette.ingredients.count() == 0
+
+
+@pytest.mark.django_db
+def test_la_page_detail_propose_un_lien_de_suppression(client, user, recette):
+    client.force_login(user)
+    reponse = client.get(reverse("recettes:recette_detail", args=[recette.pk]))
+    assert reverse("recettes:recette_supprimer", args=[recette.pk]) in reponse.content.decode()
+
+
+@pytest.mark.django_db
+def test_supprimer_une_recette(client, user, recette, farine):
+    client.force_login(user)
+    reponse = client.post(reverse("recettes:recette_supprimer", args=[recette.pk]))
+    assert reponse.status_code == 302
+    assert not Recette.objects.filter(pk=recette.pk).exists()
+    # Ses ingrédients disparaissent avec elle (CASCADE).
+    assert not Ingredient.objects.filter(recette_id=recette.pk).exists()
+
+
+@pytest.mark.django_db
+def test_la_suppression_demande_une_confirmation(client, user, recette):
+    client.force_login(user)
+    reponse = client.get(reverse("recettes:recette_supprimer", args=[recette.pk]))
+    assert reponse.status_code == 200
+    assert Recette.objects.filter(pk=recette.pk).exists()

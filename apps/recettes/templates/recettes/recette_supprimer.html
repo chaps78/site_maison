@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block titre %}Supprimer {{ recette.titre }} – Recettes{% endblock %}
+
+{% block contenu %}
+    <h1>Supprimer « {{ recette.titre }} » ?</h1>
+    <p>Ses ingrédients et son historique de courses seront supprimés avec elle.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer la suppression</button>
+    </form>
+    <p><a href="{% url 'recettes:recette_detail' recette.pk %}">Annuler</a></p>
+{% endblock %}

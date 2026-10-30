@@ -29,6 +29,8 @@
     <p>
         <a href="{% url 'recettes:recette_modifier' recette.pk %}">Modifier</a>
         —
+        <a href="{% url 'recettes:recette_supprimer' recette.pk %}">Supprimer</a>
+        —
         <a href="{% url 'recettes:liste' %}">Retour aux recettes</a>
     </p>
 {% endblock %}

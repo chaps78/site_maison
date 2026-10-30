@@ -21,4 +21,5 @@ urlpatterns = [
     ),
     path("<int:pk>/", views.recette_detail, name="recette_detail"),
     path("<int:pk>/modifier/", views.recette_modifier, name="recette_modifier"),
+    path("<int:pk>/supprimer/", views.recette_supprimer, name="recette_supprimer"),
 ]
