@@ -52,11 +52,35 @@ body.avec-menu {
     gap: 1.5rem;
 }
 
+.menu-entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .menu-lateral .logo {
     font-size: 1.3rem;
     font-weight: 700;
     text-decoration: none;
     color: var(--couleur-texte);
+}
+
+/* Bouton burger : caché par défaut, visible seulement sur petit écran (media query). */
+.bouton-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--couleur-texte);
+    padding: 0.25rem 0.4rem;
+}
+
+.contenu-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .liens-navigation {
@@ -372,6 +396,21 @@ dialog::backdrop {
         width: auto;
         border-right: none;
         border-bottom: 1px solid var(--couleur-bordure);
+    }
+
+    .bouton-menu {
+        display: block;
+    }
+
+    /* Replié par défaut sur petit écran ; .ouvert est ajoutée/retirée par le JS
+       du bouton burger (voir core/base.html). */
+    .contenu-menu {
+        display: none;
+        margin-top: 1rem;
+    }
+
+    .contenu-menu.ouvert {
+        display: flex;
     }
 
     .contenu {

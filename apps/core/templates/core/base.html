@@ -10,63 +10,88 @@
 <body class="{% if user.is_authenticated %}avec-menu{% else %}sans-menu{% endif %}">
     {% if user.is_authenticated %}
         <nav class="menu-lateral">
-            <a href="{% url 'core:accueil' %}" class="logo">Maison</a>
+            <div class="menu-entete">
+                <a href="{% url 'core:accueil' %}" class="logo">Maison</a>
+                {# Visible seulement sur petit écran (voir base.css) : replie/déplie le reste du menu. #}
+                <button
+                    type="button"
+                    class="bouton-menu"
+                    id="bouton-menu"
+                    aria-expanded="false"
+                    aria-controls="contenu-menu"
+                    aria-label="Ouvrir le menu"
+                >☰</button>
+            </div>
 
-            <ul class="liens-navigation">
-                <li>
-                    <a
-                        href="{% url 'recettes:liste' %}"
-                        class="{% if request.resolver_match.app_name == 'recettes' %}actif{% endif %}"
-                    >Recettes</a>
-                </li>
-                <li>
-                    <a
-                        href="{% url 'calendrier:vue' %}"
-                        class="{% if request.resolver_match.app_name == 'calendrier' %}actif{% endif %}"
-                    >Calendrier</a>
-                </li>
-                <li>
-                    <a
-                        href="{% url 'taches:accueil' %}"
-                        class="{% if request.resolver_match.app_name == 'taches' %}actif{% endif %}"
-                    >Tâches</a>
-                </li>
-                <li>
-                    <a
-                        href="{% url 'revisions:accueil' %}"
-                        class="{% if request.resolver_match.app_name == 'revisions' %}actif{% endif %}"
-                    >Révisions</a>
-                </li>
-                <li>
-                    <a
-                        href="{% url 'diner:accueil' %}"
-                        class="{% if request.resolver_match.app_name == 'diner' %}actif{% endif %}"
-                    >On mange quoi ?</a>
-                </li>
-            </ul>
+            <div class="contenu-menu" id="contenu-menu">
+                <ul class="liens-navigation">
+                    <li>
+                        <a
+                            href="{% url 'recettes:liste' %}"
+                            class="{% if request.resolver_match.app_name == 'recettes' %}actif{% endif %}"
+                        >Recettes</a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'calendrier:vue' %}"
+                            class="{% if request.resolver_match.app_name == 'calendrier' %}actif{% endif %}"
+                        >Calendrier</a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'taches:accueil' %}"
+                            class="{% if request.resolver_match.app_name == 'taches' %}actif{% endif %}"
+                        >Tâches</a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'revisions:accueil' %}"
+                            class="{% if request.resolver_match.app_name == 'revisions' %}actif{% endif %}"
+                        >Révisions</a>
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'diner:accueil' %}"
+                            class="{% if request.resolver_match.app_name == 'diner' %}actif{% endif %}"
+                        >On mange quoi ?</a>
+                    </li>
+                </ul>
 
-            {% if points_du_mois %}
-                <div class="points-du-mois">
-                    <h2>Points du mois</h2>
-                    <ul>
-                        {% for enfant in points_du_mois %}
-                            <li><span>{{ enfant.first_name }}</span><strong>{{ enfant.total }}</strong></li>
-                        {% endfor %}
-                    </ul>
+                {% if points_du_mois %}
+                    <div class="points-du-mois">
+                        <h2>Points du mois</h2>
+                        <ul>
+                            {% for enfant in points_du_mois %}
+                                <li><span>{{ enfant.first_name }}</span><strong>{{ enfant.total }}</strong></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <div class="bas-du-menu">
+                    <a
+                        href="{% url 'core:profils_liste' %}"
+                        class="{% if request.resolver_match.url_name == 'profils_liste' %}actif{% endif %}"
+                    >{{ user.first_name }} · Profils</a>
+                    <form action="{% url 'core:deconnexion' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Se déconnecter</button>
+                    </form>
                 </div>
-            {% endif %}
-
-            <div class="bas-du-menu">
-                <a
-                    href="{% url 'core:profils_liste' %}"
-                    class="{% if request.resolver_match.url_name == 'profils_liste' %}actif{% endif %}"
-                >{{ user.first_name }} · Profils</a>
-                <form action="{% url 'core:deconnexion' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Se déconnecter</button>
-                </form>
             </div>
         </nav>
+        <script>
+            // Menu burger : uniquement visible en CSS sur petit écran (voir base.css).
+            // Un clic bascule une classe pour afficher/masquer les liens ; rien côté serveur.
+            (function () {
+                var bouton = document.getElementById("bouton-menu");
+                var contenu = document.getElementById("contenu-menu");
+                bouton.addEventListener("click", function () {
+                    var ouvert = contenu.classList.toggle("ouvert");
+                    bouton.setAttribute("aria-expanded", ouvert ? "true" : "false");
+                });
+            })();
+        </script>
     {% endif %}
     <main class="contenu">
         {% block contenu %}{% endblock %}
