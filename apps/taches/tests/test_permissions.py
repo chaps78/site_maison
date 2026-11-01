@@ -1,5 +1,8 @@
+import re
+
 import pytest
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.taches.models import TacheEffectuee, TypeTache
 
@@ -21,6 +24,20 @@ def test_un_enfant_ne_voit_pas_le_formulaire_d_ajout(client, philippe):
     client.force_login(philippe)
     reponse = client.get(reverse("taches:accueil"))
     assert "Ajouter une tâche faite aujourd'hui" not in reponse.content.decode()
+
+
+@pytest.mark.django_db
+def test_la_page_affiche_les_points_du_mois_de_chaque_enfant(
+    client, maman, philippe, josephine, lecture
+):
+    TacheEffectuee.objects.create(
+        enfant=josephine, type_tache=lecture, created_by=maman, date=timezone.localdate()
+    )
+    client.force_login(maman)
+    reponse = client.get(reverse("taches:accueil"))
+    contenu = reponse.content.decode()
+    assert re.search(r"Philippe.*?0 point", contenu, re.S)
+    assert re.search(r"Joséphine.*?2 point", contenu, re.S)
 
 
 @pytest.mark.django_db

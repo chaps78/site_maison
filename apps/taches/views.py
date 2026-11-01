@@ -35,10 +35,16 @@ def accueil(request):
         .select_related("enfant", "type_tache")
         .order_by("enfant__ordre", "-created_at")
     )
+    enfants_totaux = totaux_du_mois(aujourdhui.year, aujourdhui.month)
     return render(
         request,
         "taches/accueil.html",
-        {"form": form, "taches_du_jour": taches_du_jour, "aujourdhui": aujourdhui},
+        {
+            "form": form,
+            "taches_du_jour": taches_du_jour,
+            "aujourdhui": aujourdhui,
+            "enfants_totaux": enfants_totaux,
+        },
     )
 
 

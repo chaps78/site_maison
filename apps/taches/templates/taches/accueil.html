@@ -10,6 +10,18 @@
         <a href="{% url 'taches:catalogue' %}">Catalogue des tâches</a>
     </p>
 
+    <h2>Points du mois</h2>
+    <ul class="totaux-points">
+        {% for enfant in enfants_totaux %}
+            <li>
+                <strong>{{ enfant.first_name }}</strong> :
+                <span class="{% if enfant.total < 0 %}points-negatifs{% endif %}">
+                    {{ enfant.total }} point{{ enfant.total|pluralize }}
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+
     {% if form %}
         <h2>Ajouter une tâche faite aujourd'hui</h2>
         <form method="post">
