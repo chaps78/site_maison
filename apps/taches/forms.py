@@ -12,6 +12,9 @@ class TypeTacheForm(forms.ModelForm):
         model = TypeTache
         fields = ["nom", "points", "actif"]
         labels = {"nom": "Nom de la tâche", "points": "Points", "actif": "Active"}
+        help_texts = {
+            "points": "Négatif pour une punition (retire des points au lieu d'en donner)."
+        }
 
 
 class TacheRapideForm(forms.Form):

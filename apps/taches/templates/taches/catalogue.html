@@ -10,7 +10,11 @@
     <ul class="liste-catalogue">
         {% for type_tache in types %}
             <li>
-                {{ type_tache.nom }} — {{ type_tache.points }} point{{ type_tache.points|pluralize }}
+                {{ type_tache.nom }} —
+                <span class="{% if type_tache.points < 0 %}points-negatifs{% endif %}">
+                    {{ type_tache.points }} point{{ type_tache.points|pluralize }}
+                </span>
+                {% if type_tache.points < 0 %}<span class="badge badge-punition">punition</span>{% endif %}
                 {% if not type_tache.actif %}<span class="badge">inactive</span>{% endif %}
                 {% if user.est_parent %}
                     — <a href="{% url 'taches:catalogue_modifier' type_tache.pk %}">modifier</a>

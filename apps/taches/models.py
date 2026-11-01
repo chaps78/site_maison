@@ -8,7 +8,10 @@ class TypeTache(models.Model):
     """Une tâche du catalogue (« mettre la table », « lecture »...) et ses points."""
 
     nom = models.CharField(max_length=100, unique=True)
-    points = models.PositiveSmallIntegerField(default=1)
+    # Un nombre négatif sert à créer une « punition » (retire des points plutôt que
+    # d'en donner) ; le système de points lui-même ne distingue pas les deux, c'est
+    # juste le signe qui change.
+    points = models.SmallIntegerField(default=1)
     # Pour retirer une tâche du catalogue sans casser l'historique des tâches déjà faites
     # (TacheEffectuee.type_tache est en PROTECT : impossible de la supprimer pour de vrai).
     actif = models.BooleanField("active", default=True)

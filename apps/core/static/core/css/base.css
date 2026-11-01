@@ -260,6 +260,20 @@ button:hover, input[type="submit"]:hover {
     color: var(--couleur-erreur);
 }
 
+/* Points négatifs (punitions) : toujours en rouge, y compris dans le widget du
+   menu où .points-du-mois strong impose déjà une couleur (règle plus spécifique
+   pour l'emporter). */
+.points-negatifs,
+.points-du-mois strong.points-negatifs {
+    color: var(--couleur-erreur);
+    font-weight: 600;
+}
+
+.badge-punition {
+    color: var(--couleur-erreur);
+    border-color: var(--couleur-erreur);
+}
+
 .badge {
     font-size: 0.75rem;
     color: var(--couleur-texte-discret);

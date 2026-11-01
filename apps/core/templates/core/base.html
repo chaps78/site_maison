@@ -62,7 +62,12 @@
                         <h2>Points du mois</h2>
                         <ul>
                             {% for enfant in points_du_mois %}
-                                <li><span>{{ enfant.first_name }}</span><strong>{{ enfant.total }}</strong></li>
+                                <li>
+                                    <span>{{ enfant.first_name }}</span>
+                                    <strong class="{% if enfant.total < 0 %}points-negatifs{% endif %}">
+                                        {{ enfant.total }}
+                                    </strong>
+                                </li>
                             {% endfor %}
                         </ul>
                     </div>

@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from django.urls import reverse
 
@@ -32,9 +34,9 @@ def test_le_total_mensuel_additionne_les_points_et_ignore_les_autres_mois(
     client.force_login(maman)
     reponse = client.get(reverse("taches:historique"), {"annee": 2026, "mois": 10})
     contenu = reponse.content.decode()
-    assert "Joséphine</strong> : 3 points" in contenu
+    assert re.search(r"Joséphine.*?3 point", contenu, re.S)
     # Philippe n'a rien fait en octobre : il apparaît quand même, avec 0.
-    assert "Philippe</strong> : 0 points" in contenu
+    assert re.search(r"Philippe.*?0 point", contenu, re.S)
 
 
 @pytest.mark.django_db

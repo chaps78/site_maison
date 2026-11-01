@@ -24,7 +24,10 @@
         {% for tache in taches_du_jour %}
             <li>
                 <strong>{{ tache.enfant.first_name }}</strong>
-                — {{ tache.type_tache.nom }} ({{ tache.type_tache.points }} pt)
+                — {{ tache.type_tache.nom }}
+                (<span class="{% if tache.type_tache.points < 0 %}points-negatifs{% endif %}">
+                    {{ tache.type_tache.points }} pt
+                </span>)
                 {% if user.est_parent %}
                     — <a href="{% url 'taches:effectuee_supprimer' tache.pk %}">supprimer</a>
                 {% endif %}
