@@ -15,6 +15,12 @@ class TypeTacheForm(forms.ModelForm):
         help_texts = {
             "points": "Négatif pour une punition (retire des points au lieu d'en donner)."
         }
+        widgets = {
+            # Pas type="number" : sur mobile, son clavier numérique n'a souvent pas de
+            # signe moins. Un champ texte garde le même résultat (Django valide et
+            # convertit en entier à la soumission) mais garantit de pouvoir taper "-".
+            "points": forms.TextInput(attrs={"pattern": r"-?\d*"}),
+        }
 
 
 class TacheRapideForm(forms.Form):
