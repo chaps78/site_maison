@@ -41,6 +41,20 @@ def test_la_page_affiche_les_points_du_mois_de_chaque_enfant(
 
 
 @pytest.mark.django_db
+def test_la_page_affiche_une_barre_de_progression_vers_les_paliers(
+    client, maman, josephine, lecture
+):
+    TacheEffectuee.objects.create(
+        enfant=josephine, type_tache=lecture, created_by=maman, date=timezone.localdate()
+    )
+    client.force_login(maman)
+    reponse = client.get(reverse("taches:accueil"))
+    contenu = reponse.content.decode()
+    assert "barre-palier-remplie" in contenu
+    assert re.search(r"Joséphine.*?Palier\s+1\s+à\s+300\s+points", contenu, re.S)
+
+
+@pytest.mark.django_db
 def test_un_parent_peut_enregistrer_une_tache(client, maman, josephine, lecture):
     client.force_login(maman)
     reponse = client.post(

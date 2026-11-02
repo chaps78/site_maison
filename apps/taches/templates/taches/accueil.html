@@ -18,6 +18,22 @@
                 <span class="{% if enfant.total < 0 %}points-negatifs{% endif %}">
                     {{ enfant.total }} point{{ enfant.total|pluralize }}
                 </span>
+
+                <div class="barre-palier">
+                    <div
+                        class="barre-palier-remplie"
+                        style="width: {{ enfant.progression.pourcentage }}%"
+                    ></div>
+                </div>
+                <p class="detail-palier">
+                    {% if enfant.progression.palier_suivant %}
+                        Palier {{ enfant.progression.paliers_atteints|add:1 }}
+                        à {{ enfant.progression.palier_suivant }} points
+                        ({{ enfant.progression.pourcentage }} %)
+                    {% else %}
+                        🏆 Tous les paliers atteints !
+                    {% endif %}
+                </p>
             </li>
         {% endfor %}
     </ul>

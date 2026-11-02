@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from .forms import TacheRapideForm, TypeTacheForm
 from .models import TacheEffectuee, TypeTache
+from .paliers import progression
 from .points import totaux_du_mois
 
 
@@ -35,7 +36,9 @@ def accueil(request):
         .select_related("enfant", "type_tache")
         .order_by("enfant__ordre", "-created_at")
     )
-    enfants_totaux = totaux_du_mois(aujourdhui.year, aujourdhui.month)
+    enfants_totaux = list(totaux_du_mois(aujourdhui.year, aujourdhui.month))
+    for enfant in enfants_totaux:
+        enfant.progression = progression(enfant.total)
     return render(
         request,
         "taches/accueil.html",

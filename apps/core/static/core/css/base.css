@@ -343,6 +343,30 @@ ul.liste-exercices li {
     color: var(--couleur-accent);
 }
 
+/* --- Tâches : barre de progression vers les paliers de points du mois --- */
+
+.barre-palier {
+    background: var(--couleur-fond);
+    border: 1px solid var(--couleur-bordure);
+    border-radius: 999px;
+    height: 0.6rem;
+    overflow: hidden;
+    margin: 0.4rem 0 0.2rem;
+    max-width: 16rem;
+}
+
+.barre-palier-remplie {
+    background: var(--couleur-accent);
+    height: 100%;
+    border-radius: 999px;
+}
+
+.detail-palier {
+    font-size: 0.8rem;
+    color: var(--couleur-texte-discret);
+    margin: 0 0 0.75rem;
+}
+
 table.matrice-multiplication {
     border-collapse: collapse;
     margin-bottom: 1.5rem;
