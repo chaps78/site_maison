@@ -14,5 +14,5 @@ urlpatterns = [
 ]
 
 # En développement (runserver), Django sert lui-même les photos ; en production c'est nginx
-# (cette fonction ne fait rien du tout quand DEBUG est False).
+# (cette fonction ne fait rien lorsque DEBUG est False).
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
